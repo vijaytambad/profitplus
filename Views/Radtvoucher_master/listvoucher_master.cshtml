@@ -1,0 +1,119 @@
+@using System.Data;
+@{
+    Layout = "~/Views/Shared/_Dashboard.cshtml";
+}
+	
+<script type="text/javascript">
+$(document).ready(function(e) {
+	$('.close').click(function (e) {
+            $('#popup').hide();
+    });
+	$('#addrecord').click(function(e){
+		e.preventDefault();
+		var myurl=$(this).attr('href');	
+		//alert(myurl)
+		$.ajax({
+			type:'POST',
+			url:myurl,
+			success:function(res){
+				//alert(res)
+				$('.modal-dialog').html(res);
+				$('#popup').show();
+			}
+		});
+	});
+	
+	$('.edit').click(function(e){
+		e.preventDefault();
+		var myurl=$(this).attr('href');	
+		//alert(myurl)
+		$.ajax({
+			type:'POST',
+			url:myurl,
+			success:function(res){
+				//alert(res);
+				$('.modal-dialog').html(res);
+				$('#popup').show();
+			},
+			error:function(error){
+				$('.modal-dialog').html(error);
+				$('#popup').show();
+			}
+		});
+	});
+	
+	$('.delete').click(function(e){
+		e.preventDefault();
+		var myurl=$(this).attr('href');	
+		//alert(myurl)
+		$.ajax({
+			type:'POST',
+			url:myurl,
+			success:function(res){
+				alert(res);
+				$('#popup').hide();
+				location.reload(true);
+			}
+		});
+	});
+	
+});
+</script>
+
+  <div class="modal fade" id="popup" role="dialog" style="width:60%;margin:5% auto;">
+    <div class="modal-dialog">
+        
+    </div>
+  </div> 
+
+
+<div class="row>
+<div class="panel col-sx-12" >
+	<div class="panel-heading text-center">
+		 <h6>@ViewData["TableHeading"]</h6>
+	</div>
+	
+	<div class="panel-body" >
+		<a class='modal-link btn-xs btn-success' id='addrecord' data-toggle='modal' data-target='#popup' href="@ViewData["addlink"]" >Add voucher_master</a>
+		<div class="table-responsive">
+		<table  class="table table-bordered table-condensed"  id="tblvoucher_master">
+			<thead> <!-- ;$html.= count($headings); -->
+				<tr class="h6">
+					@for (int i = 0; i < @Model.Tables["RadtVoucher_master"].Columns.Count; i++)
+					{
+						<td>@Model.Tables["RadtVoucher_master"].Columns[i].ColumnName</td>
+					} 
+					<td>Actions</td>
+                </tr>
+			</thead>
+			<tbody>
+				<tr> 
+					@for (var i = 0; i < Model.Tables["RadtVoucher_master"].Rows.Count; i++)
+     {
+						<tr>
+						@for (int j = 0; j < Model.Tables["RadtVoucher_master"].Columns.Count; j++)
+						{
+                            String datatype = @Model.Tables["RadtVoucher_master"].Columns[j].DataType.ToString();
+							String classname = "text-left";
+							if (datatype == "int") classname = "text-right"; 
+							<td class="@classname">@Model.Tables["RadtVoucher_master"].Rows[i].ItemArray[j] </td>
+						}
+						<td><a  href="voucher_masterEdit/@Model.Tables["RadtVoucher_master"].Rows[i]["id"]" data-toggle="modal" data-target="#popup" id="edit" class="modal-link btn-xs btn-success edit">Edit</a>
+						<a  href="voucher_masterdelete/@Model.Tables["RadtVoucher_master"].Rows[i]["id"]" data-toggle="modal" data-target="#popup" id="delete" class="modal-link btn-xs btn-success delete">Delete</a></td>
+						
+						</tr>
+					}
+			</tbody>
+			
+		</table>
+		</div>
+        
+	</div> 
+	<div>
+		@{if (ViewBag.pageLinks != "")
+		{
+			@Html.Raw(ViewBag.pageLinks);
+		}
+   }
+	</div>
+</div>	

@@ -1,0 +1,103 @@
+@using  System.Data;
+<script type="text/javascript">
+$( document ).ready( function () {
+	$('#popup').on('hidden.bs.modal', function () {
+		location.reload();
+	});
+	$('#myimg').hide();
+     jQuery.validator.addMethod("lettersonly", function(value, element) 
+            {
+             return this.optional(element) || /^[a-z," "]+$/i.test(value);
+            }, "Letters only please");
+            jQuery.validator.addMethod("alphanumeric", function(value, element) {
+	       // return this.optional(element) || /^\w+$/i.test(value);
+               return this.optional(element) || /^[\w\d\/]+$/i.test(value);
+            }, "Letters, numbers, spaces or underscores only please");  
+	    $( '#user_menus_form' ).validate( {
+		submitHandler: function(form) {
+		var myurl=$('#user_menus_form').attr('action');
+		var mydata=$('#user_menus_form').serialize();
+		$('#popup').scrollTop(1);
+		$('#myimg').show();
+		alert(mydata);
+		$.ajax({
+			type:'POST',
+			url:myurl,
+			dataType:"text",
+			data:mydata,
+			success:function(res){
+				alert(res);
+				//$('#modal-dialog').html(res);
+				$('#popup').hide();
+				location.reload(true);
+			}
+		});
+		},
+			rules: {
+				menuname:{required:true,maxlength:50,lettersonly:true,remote:'IsAvailable'},
+                menuurl:{required:true,maxlength:70,alphanumeric:true},
+			},
+				
+			messages: {
+				menuname:{required:'This field is Compulsary',maxlength:'The Max Allowed Characters is 50',lettersonly:'Only and Alphabets are Allowed',remote:'The User_Menu Already Exists'},
+                menuurl:{required:'This field is Compulsary',maxlength:'The Max Allowed Characters is 70',alphanumeric:'Only Alphabets,Numbers,Underscore and / are Allowed'},
+			},
+			errorElement: "em",
+			errorPlacement: function ( error, element ) {
+				// Add the `help-block` class to the error element
+			error.addClass( "help-block errors" );
+			if ( element.prop( "type" ) === "checkbox" ) {
+				error.insertAfter( element.parent( "label" ) );
+			} else {
+				error.insertAfter( element );
+			}
+			},
+			highlight: function ( element, errorClass, validClass ) {
+				$( element ).parents( ".col-sm-5" ).addClass( "has-error" ).removeClass( "has-success" );
+			},
+			unhighlight: function (element, errorClass, validClass) {
+				$( element ).parents( ".col-sm-5" ).addClass( "has-success" ).removeClass( "has-error" );
+			}
+		});
+			
+});
+$.fn.modal.Constructor.prototype.enforceFocus = function() {};
+</script>
+@{DataRow dr=Model.Tables[0].Rows[0];}
+<div class="modal-content">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">&times;</button>
+      @ViewBag.DialogTitle
+  </div>
+  <div class="modal-body">
+	<div id="message" class="row"></div>
+    <form id="user_menus_form" name="user_menus_form" role="form" action ="save" >
+      <fieldset id="form_set">
+        		<div class="form-group" style="height:5px;display:none;">
+			<label class="control-label col-xs-3 text-right">menuid</label>
+        	<input type="text" id="menuid" name="menuid" value="@dr["menuid"]" />
+		</div>
+		<div class="form-group">
+			<label class="control-label col-xs-3 text-right">menuname</label>
+			<input type="text" id="menuname" name="menuname" placeholder="menuname" value="@dr["menuname"]" />
+		</div>
+				<div class="form-group">
+			<label class="control-label col-xs-3 text-right">menuurl</label>
+			<input type="text" id="menuurl" name="menuurl" placeholder="menuurl" value="@dr["menuurl"]" />
+		</div>
+				<div class="form-group" style="height:5px;display:none;">
+			<label class="control-label col-xs-3 text-right">parentid</label>
+        	<input type="text" id="parentid" name="parentid" value="@dr["parentid"]" />
+		</div>
+
+        <input type="submit" id="btnuser_menus" class="btn btn-lg btn-success" value="Submit" />
+      </fieldset>
+    </form>
+  </div>
+  <div class="modal-footer">
+
+  </div>
+</div>
+
+
+      

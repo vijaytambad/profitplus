@@ -1,0 +1,193 @@
+﻿@using System.Data;
+@{
+    ViewBag.Title = "addCadtVoucher";
+    Layout = "~/Views/Shared/_Dashboard.cshtml";
+}
+<script type="text/javascript">
+$( document ).ready( function () {
+
+	$('#popup').on('hidden.bs.modal', function () {
+		location.reload();
+	});
+       $("#billtypeid").on("change", function()  
+        {  
+        //alert("HELLO");
+        var  myurl="GetBillDetails?billid="+$('#billtypeid').val();
+            $.ajax(  
+            {  
+                type: 'POST',  
+                url:myurl,
+			    dataType:"text",  
+                success: function(data)  
+                {  
+                    $("#itemtable").html(data);  
+                },  
+                error: function()  
+                {  
+                    alert("error");  
+                }  
+            });  
+        });  
+	//$('#myimg').hide();
+     
+	$( '#CadtVoucher' ).validate( {
+		submitHandler: function(form) {
+		var  myurl=$('#CadtVoucher').attr("action");
+		var mydata=$('#CadtVoucher').serialize();
+		//$('#popup').scrollTop(1);
+		//$('#myimg').show();
+      //  alert(myurl);
+		//alert(mydata);
+		$.ajax({
+			type:'Post',
+			url:myurl,
+			dataType:"text",
+			data:mydata,
+			success:function(res){
+				alert(res);
+				//$('#itemtable').html(res);
+			}
+		});
+		},
+			rules: {
+                      
+            vdate:{remote:'ValidateDate'},
+
+			},
+				
+		messages: {				
+               
+        vdate:{remote:'Please select date in financial Year'  },
+
+			},
+			errorElement: "em",
+			errorPlacement: function ( error, element ) {
+				// Add the `help-block` class to the error element
+			error.addClass( "help-block errors" );
+			if ( element.prop( "type" ) === "checkbox" ) {
+				error.insertAfter( element.parent( "label" ) );
+			} else {
+				error.insertAfter( element );
+			}
+			},
+			highlight: function ( element, errorClass, validClass ) {
+				$( element ).parents( ".col-sm-5" ).addClass( "has-error" ).removeClass( "has-success" );
+			},
+			unhighlight: function (element, errorClass, validClass) {
+				$( element ).parents( ".col-sm-5" ).addClass( "has-success" ).removeClass( "has-error" );
+			}
+            
+		});
+
+        });
+			
+
+</script>
+@{DataRow dr=Model.Tables[0].Rows[0];}
+
+    <form id="CadtVoucher" name="CadtVoucher" role="form" action ="savevoucher" >
+    <h6 align="center">CADT VOUCHER</h6>
+      <fieldset id="form_set">
+        	<div class="container">
+        <div class="row">
+        <div class="col-sm-4">
+        <div class="form-group" style="height:5px;display:none;">
+			<label class="control-label col-xs-3 text-right">id</label>
+        	<input type="text" id="id" name="id" value="" />
+		</div>
+        <div class="form-group">
+		<label for="billtypeid">Bill Type Name</label>           
+        @Html.DropDownList("billtypeid", (SelectList)ViewBag.billtype_master,"select billtype") 
+        </div>
+    </div>
+    <div class="col-sm-4">
+       <div class="form-group">
+        
+        <label for="partyid">Party Name </label>
+        @Html.DropDownList("partyid", (SelectList)ViewBag.party_master,"select party")
+         </div>
+    </div>
+    <div class="col-sm-4">
+        <div class="form-group">
+        <div class="bootstrap-datepicker-widget">
+         <label for="vdate">DATE:</label>
+	     <input type="text" id="vdate" name="vdate" placeholder="vdate" value="" />
+        
+         </div>    
+         </div>	
+    </div>
+     <script type="text/javascript">
+
+        $(function () {
+            $("#vdate").datepicker({
+                 dateFormat: 'yy-mm-dd',
+                 changeMonth: true,
+                 changeYear: true
+             });  
+            
+             $("#rvdate").datepicker({
+                 dateFormat: 'yy-mm-dd',
+                 changeMonth: true,
+                 changeYear: true
+             });
+             $("#podate").datepicker({
+                 dateFormat: 'yy-mm-dd',
+                 changeMonth: true,
+                 changeYear: true
+             });
+             $("#invoicedate").datepicker({
+                 dateFormat: 'yy-mm-dd',
+                 changeMonth: true,
+                 changeYear: true
+             });
+         });
+           </script>
+
+            <div class="col-sm-4">
+            <div class="form-group" >
+			<label for="rvno">RV.NO:</label>
+			<input type="text" id="rvno" name="rvno" placeholder="rvno" value="" />
+            </div>
+             </div>
+             <div class="col-sm-8">
+              <div class="form-group" >
+              <label for="rvdate">DATE:</label>
+			<input type="text" id="rvdate" name="rvdate" placeholder="rvdate" value="" />
+            </div>
+             </div>
+             <div class="col-sm-4">
+            <div class="form-group" >
+			<label for="pono">PO.NO:</label>
+            <input type="text" id="pono" name="pono" placeholder="pono" value="" />
+            </div>
+             </div>
+             <div class="col-sm-8">
+              <div class="form-group" >
+              <label for="podate">DATE:</label>
+			<input type="text" id="podate" name="podate" placeholder="podate" value="" /> 
+            </div>
+             </div>
+             <div class="col-sm-4">
+            <div class="form-group" >
+			<label for="invoice">BILL.NO:</label>
+			<input type="text" id="invoice" name="invoice" placeholder="invoice" value="" />
+            </div>
+             </div>
+             <div class="col-sm-8">
+              <div class="form-group" >
+              <label for="invoicedate">DATE:</label> 
+			<input type="text" id="invoicedate" name="invoicedate" placeholder="invoicedate" value="" />
+            </div>
+             </div>         
+        </div>
+        </div>
+
+          </fieldset>
+        
+
+  <div id="itemtable" class="row">
+
+        </div>
+
+       <input type="submit" id="btnvoucher_master" class="btn btn-lg btn-success" value="Submit" disabled="disabled" />
+        </form>

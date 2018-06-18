@@ -1,0 +1,64 @@
+﻿@using System.Data;
+@{
+    Layout = "~/Views/Shared/_Dashboard.cshtml";
+}
+
+<script>
+
+    $(document).ready(function (e) {
+        $("#pay-voucher").click(function (e) {
+            e.preventDefault();
+            var chk = $('.permit:checkbox:checked');
+            //alert(chk)
+            var chkval = "";
+            $('.permit:checkbox:checked').each(function () {
+                chkval += $(this).attr("id") + "|";
+
+            });
+            alert(chkval)
+            var myurl = "/CadtBpo/SaveBpo?chkval=" + chkval + "&bpodate=" + $("#btpdate").val();
+            alert(myurl);
+            $.ajax({
+                type: 'POST',
+                data: chkval,
+                url: myurl,
+                success: function (res) {
+                    alert(res);
+                    location.reload();
+
+                }
+            });
+        });
+    });
+
+    $(function () {
+        $("#btpdate").datepicker({
+            dateFormat: 'dd-mm-yy',
+            changeMonth: true,
+            changeYear: true
+        });
+    });
+</script>
+    <div class="modal fade" id="popup" role="dialog" style="width:60%;margin:5% auto;">
+        <div class="modal-dialog">
+        
+        </div>
+  </div> 
+
+<form class="form-inline" role="form"  method="post" name="frmcadtbpo" id="frmcadtbpo">
+    <div class="row col-xs-offset-1">
+       <div class="form-group">
+          <label for="BpoType">BPo Type</label>
+	      <label  class="form-control1">@ViewBag.bpotype</label>
+        </div>
+        <div class="form-group col-xs-4">
+          <label for="bpodate">Bpo Date</label>
+	      <input type="text" class="form-control1" id="btpdate" name="bpodate" placeholder="Enter Date">
+       </div>
+    </div>
+    <div class="table table-bordered table-condensed" style="height:300px;overflow-y:scroll;">
+       @{DataSet ds = @Model;}
+        @{Html.RenderPartial("bpotable", ds);} ;
+    </div>
+    <input type="submit" class="btn-xs btn-success" value="Pay Vouchers" id="pay-voucher" />
+</form>

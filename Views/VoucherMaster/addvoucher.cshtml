@@ -1,0 +1,96 @@
+﻿@using  System.Data;
+<script>
+$( document ).ready( function () {
+	$('#popup').on('hidden.bs.modal', function () {
+		location.reload();
+	});
+	$('#myimg').hide();
+     jQuery.validator.addMethod("lettersonly", function(value, element) 
+            {
+        return this.optional(element) || /^[a-z]+$/i.test(value);
+            }, "Letters only please"); 
+	    $( '#addvoucher' ).validate( {
+		submitHandler: function(form) {
+		var myurl=$('#addvoucher').attr('action');
+		var mydata=$('#addvoucher').serialize();
+		$('#popup').scrollTop(1);
+		$('#myimg').show();
+		alert(mydata);
+		$.ajax({
+			type:'POST',
+			url:myurl,
+			dataType:"text",
+			data:mydata,
+			success:function(res){
+				alert(res);
+				//$('#modal-dialog').html(res);
+				$('#popup').hide();
+				location.reload(true);
+			}
+		});
+		},
+			rules: {
+				accno:{required:true,maxlength:50},
+			},
+				
+			messages: {
+				accno:{required:'This field is Compulsary',maxlength:'The Max Allowed Characters is 50'},
+			},
+			errorElement: "em",
+			errorPlacement: function ( error, element ) {
+				// Add the `help-block` class to the error element
+			error.addClass( "help-block errors" );
+			if ( element.prop( "type" ) === "checkbox" ) {
+				error.insertAfter( element.parent( "label" ) );
+			} else {
+				error.insertAfter( element );
+			}
+			},
+			highlight: function ( element, errorClass, validClass ) {
+				$( element ).parents( ".col-sm-5" ).addClass( "has-error" ).removeClass( "has-success" );
+			},
+			unhighlight: function (element, errorClass, validClass) {
+				$( element ).parents( ".col-sm-5" ).addClass( "has-success" ).removeClass( "has-error" );
+			}
+		});
+			
+});
+$.fn.modal.Constructor.prototype.enforceFocus = function() {};
+</script>
+@{DataRow dr=Model.Tables[0].Rows[0];}
+<div class="modal-content">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">&times;</button>
+      @ViewBag.DialogTitle
+  </div>
+  <div class="modal-body">
+	<div id="message" class="row"></div>
+    <form id="addvoucher" name="addvoucher" role="form" action ="save" >
+      <fieldset id="form_set">
+      <div class="form-group">
+			<label class="control-label col-xs-3 text-right">Transaction Type</label>
+        	<input type="text" id="trtype" name="trtype" value="@dr["trtype"]" />
+		</div>
+        		<div class="form-group" >
+			<label class="control-label col-xs-3 text-right">AccNo</label>
+        	<input type="text" id="accno" name="accno" value="@dr["accno"]" />
+		</div>
+		<div class="form-group">
+			<label class="control-label col-xs-3 text-right">DB Amount</label>
+			<input type="text" id="dramount" name="dramount" placeholder="dramount" value="@dr["dramount"]" />
+		</div>
+		<div class="form-group">
+			<label class="control-label col-xs-3 text-right">CR Amount</label>
+			<input type="text" id="cramount" name="cramount" placeholder="cramount" value="@dr["cramount"]" />
+		</div>
+        <input type="submit" id="btndiv_master" class="btn btn-lg btn-success" value="Submit" />
+      </fieldset>
+    </form>
+  </div>
+  <div class="modal-footer">
+
+  </div>
+</div>
+
+
+      

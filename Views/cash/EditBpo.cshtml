@@ -1,0 +1,133 @@
+﻿@using System.Data;
+<script type="text/javascript">
+    $(function () {
+        $(".datepicker").datepicker({
+            dateFormat: 'dd-mm-yy',
+            changeMonth: true,
+            changeYear: true
+        });
+    });
+    $(document).ready(function (e) {
+        $('#cashform').validate({
+            submitHandler: function (form) {
+                var myurl = $('#cashform').attr("action");
+                var mydata = $('#cashform').serialize(); alert("Hello");
+                //alert(myurl);
+                $.ajax({
+                    type: 'post',
+                    url: myurl,
+                    dataType: "text",
+                    data: mydata,
+                    success: function (res) {
+                        // alert(res);
+                        $("#popup").hide();
+                        $("#bpolist").html(res);
+                        //$('#itemtable').html(res);
+                    }
+                });
+            },
+            rules: {
+
+                payamount: { customrange: [0, $("#topaidamt").val()] }
+
+            },
+
+            messages: {
+
+                payamount: { customrange: "Paid Amount Is Not Correct" }
+            },
+            errorElement: "em",
+            errorPlacement: function (error, element) {
+                // Add the `help-block` class to the error element
+                error.addClass("help-block errors");
+                if (element.prop("type") === "checkbox") {
+                    error.insertAfter(element.parent("label"));
+                } else {
+                    error.insertAfter(element);
+                }
+            },
+            highlight: function (element, errorClass, validClass) {
+                $(element).parents(".col-sm-5").addClass("has-error").removeClass("has-success");
+            },
+            unhighlight: function (element, errorClass, validClass) {
+                $(element).parents(".col-sm-5").addClass("has-success").removeClass("has-error");
+            }
+
+        });
+
+        jQuery.validator.addMethod("customrange", function (value, element, params) {
+            //alert(value);
+            if (parseInt(value) > params[0] && parseInt(value) <= params[1]) return true; else return false;
+
+        }, "")
+    });
+
+</script>
+ <div class="modal-content">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+    </div>
+<div id= "divform">
+    <form id="cashform" class"form-inline" action="/cash/savecashdetail" method="post" role="form">
+     <input type=hidden id="id" name="id" value="@Model.Rows[0]["id"]" />
+        <div id="row" class="col-xs-12">
+            <div class="col-xs-2">
+                <label>B.P.O. Number</label>
+            </div>
+            <div class="col-xs-3">
+                <input type="text" class="col-lg-12" readonly="readonly"  id="bponumber" name="bponumber" value="@Model.Rows[0]["bponumber"]" />
+                <!-- <label>@Model.Rows[0]["bponumber"]</label> -->
+            </div>
+            <div class="col-xs-2">
+                <label>Payment Type</label>
+            </div>
+            <div class="col-md-3">
+            @Html.DropDownList("paytype", (SelectList)ViewBag.aclist)
+            
+          </div>
+            
+        </div>
+        <div id="row">
+            <div class="col-xs-2">
+                <label>To Pay</label>
+            </div>
+            <div class="col-xs-4">
+                <input type="text" readonly="readonly"  id="topaidamt" name="topaidamt" value="@Model.Rows[0]["topayamt"]" />
+            </div>
+            <div class="col-xs-2">
+                <label>Cheque Date</label>
+            </div>
+            <div class="col-xs-4">
+                <input type="text" readonly="readonly" class="datepicker"  id="chequedate" name="chequedate" value="" />
+            </div>
+            
+        </div>
+        <div id="row">
+            <div class="col-xs-2">
+                <label>Cheque Number</label>
+            </div>
+            <div class="col-xs-4">
+                <input type="text"  id="chequeno" name="chequeno" value="" />
+            </div>
+            <div class="col-xs-2">
+                <label>Pay Amount</label>
+            </div>
+            <div class="col-xs-4">
+                <input type="text"  id="payamount" name="payamount" value="@Model.Rows[0]["topayamt"]" />
+            </div>
+            <div class="col-xs-2">
+                <label>Bank A/c No.</label>
+            </div>
+            <div class="col-xs-4">
+                @Html.DropDownList("bankacc", (SelectList)ViewBag.bacclist)
+            </div>
+        </div>
+
+        <div class="modal-footer text-left">
+    <input type="submit" id="paycheque" class="btn btn-sm btn-success center-block" value="Pay Cheque" />
+
+    </form>
+</div>
+</div>
+
+</div>

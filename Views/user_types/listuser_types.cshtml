@@ -1,0 +1,135 @@
+@using System.Data;
+@{
+    Layout = "~/Views/Shared/_Dashboard.cshtml";
+}
+	
+<script type="text/javascript">
+    $(document).ready(function (e) {
+        $('.close').click(function (e) {
+            $('#popup').hide();
+            location.reload(true);
+        });
+        $('#addrecord').click(function (e) {
+            e.preventDefault();
+            var myurl = $(this).attr('href');
+            //alert(myurl)
+            $.ajax({
+                type: 'POST',
+                url: myurl,
+                success: function (res) {
+                    //alert(res)
+                    $('.modal-dialog').html(res);
+                    $('#popup').show();
+                }
+            });
+        });
+
+        $('.edit').click(function (e) {
+            e.preventDefault();
+            var myurl = $(this).attr('href');
+            //alert(myurl)
+            $.ajax({
+                type: 'POST',
+                url: myurl,
+                success: function (res) {
+                    //alert(res);
+                    $('.modal-dialog').html(res);
+                    $('#popup').show();
+                },
+                error: function (error) {
+                    $('.modal-dialog').html(error);
+                    $('#popup').show();
+                }
+            });
+        });
+
+        $('.delete').click(function (e) {
+            e.preventDefault();
+            var myurl = $(this).attr('href');
+            //alert(myurl)
+            $.ajax({
+                type: 'POST',
+                url: myurl,
+                success: function (res) {
+                    alert(res);
+                    $('#popup').hide();
+                    location.reload(true);
+                }
+            });
+        });
+
+        $('.permit').click(function (e) {
+            e.preventDefault();
+            var myurl = $(this).attr('href');
+            //alert(myurl)
+            $.ajax({
+                type: 'POST',
+                url: myurl,
+                success: function (res) {
+                    //alert(res);
+                    $('.modal-dialog').html(res);
+                    $('#popup').show();
+                }
+            });
+        });
+    });
+</script>
+
+ <div class="modal fade" id="popup" role="dialog" data-backdrop="static" data-keyboard="false" style="width:50%;margin:0px auto;">
+    <div class="modal-dialog">
+        
+    </div>
+  </div>
+
+
+<div class="row>
+<div class="panel col-sx-12" >
+	<div class="panel-heading text-center">
+		 <h6>@ViewData["TableHeading"]</h6>
+	</div>
+	
+	<div class="panel-body" >
+		<a class='btn btn-success btn-xs' id='addrecord' data-toggle='modal' data-target='#popup' href="@ViewData["addlink"]" >Add user_types</a>
+		<div class="table-responsive">
+		<table  class="table table-bordered table-condensed"  id="tbluser_types">
+			<thead> <!-- ;$html.= count($headings); -->
+				<tr class="h6">
+					@for(int i=0;i<@Model.Tables["user_types"].Columns.Count;i++)
+					{
+						<td>@Model.Tables["user_types"].Columns[i].ColumnName</td>
+					} 
+					<td>Actions</td>
+                </tr>
+			</thead>
+			<tbody>
+				<tr> 
+					@for(var i=0;i<Model.Tables["user_types"].Rows.Count;i++){
+						<tr>
+						@for (int j = 0; j < Model.Tables["user_types"].Columns.Count; j++)
+						{
+							String datatype = @Model.Tables["user_types"].Columns[j].DataType.ToString();
+							String classname = "text-left";
+							if (datatype == "int") classname = "text-right"; 
+							<td class="@classname">@Model.Tables["user_types"].Rows[i].ItemArray[j] </td>
+						}
+						<td><a  href="user_typesEdit/@Model.Tables["user_types"].Rows[i]["usertypeid"]" data-toggle="modal" data-target="#popup" id="edit" class="modal-link btn-xs btn-success edit">Edit</a>
+						<a  href="user_typesdelete/@Model.Tables["user_types"].Rows[i]["usertypeid"]" data-toggle="modal" data-target="#popup" id="delete" class="modal-link btn-xs btn-success delete">Delete</a>
+                        <a  data-toggle="modal" data-target="#popup" href="/user_types/SetPermission/@Model.Tables["User_types"].Rows[i]["usertypeid"]" id="permit" class="modal-link btn-xs btn-success permit">Assign Permissions</a>
+                        </td>
+						
+						</tr>
+					}
+			</tbody>
+			
+		</table>
+		</div>
+        
+	</div> 
+	<div>
+		@{if (ViewBag.pageLinks != "")
+		{
+			@Html.Raw(ViewBag.pageLinks);
+		}
+   }
+	</div>
+</div>	

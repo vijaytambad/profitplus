@@ -1,0 +1,132 @@
+﻿@using System.Data;
+@{
+    ViewBag.Title = "addradtVoucher";
+    Layout = "~/Views/Shared/_Dashboard.cshtml";
+}
+<script type="text/javascript">
+$( document ).ready( function () {
+
+	$('#popup').on('hidden.bs.modal', function () {
+		location.reload();
+	});
+       $("#billtypeid").on("change", function()  
+        {  
+        //alert("HELLO");
+        var  myurl="GetBillDetails?billid="+$('#billtypeid').val();
+            $.ajax(  
+            {  
+                type: 'POST',  
+                url:myurl,
+			    dataType:"text",  
+                success: function(data)  
+                {  
+                    $("#itemtable").html(data);  
+                },  
+                error: function()  
+                {  
+                    alert("error");  
+                }  
+            });  
+        });  
+	//$('#myimg').hide();
+     
+	$( '#voucher_master_form' ).validate( {
+		submitHandler: function(form) {
+		var  myurl=$('#voucher_master_form').attr("action");
+		var mydata=$('#voucher_master_form').serialize();
+		//$('#popup').scrollTop(1);
+		//$('#myimg').show();
+		//alert(myurl); alert(mydata);
+		$.ajax({
+			type:'post',
+			url:myurl,
+			dataType:"text",
+			data:mydata,
+			success:function(res){
+				alert(res);
+				//$('#itemtable').html(res);
+			}
+		});
+		},
+			rules: {
+                vdate:{required:true },
+                billtypeid:{required:true },
+           
+
+			},
+				
+		messages: {				
+            vdate:{required:'This field is Compulsary' },
+            billtypeid:{required:'This field is Compulsary'},
+
+			},
+			errorElement: "em",
+			errorPlacement: function ( error, element ) {
+				// Add the `help-block` class to the error element
+			error.addClass( "help-block errors" );
+			if ( element.prop( "type" ) === "checkbox" ) {
+				error.insertAfter( element.parent( "label" ) );
+			} else {
+				error.insertAfter( element );
+			}
+			},
+			highlight: function ( element, errorClass, validClass ) {
+				$( element ).parents( ".col-sm-5" ).addClass( "has-error" ).removeClass( "has-success" );
+			},
+			unhighlight: function (element, errorClass, validClass) {
+				$( element ).parents( ".col-sm-5" ).addClass( "has-success" ).removeClass( "has-error" );
+			}
+            
+		});
+
+        });
+			
+        $(function () {
+             $(".datepicker").datepicker({
+                 dateFormat: 'yy-mm-dd',
+                 changeMonth: true,
+                 changeYear: true
+         });
+         });
+</script>
+@{DataRow dr=Model.Tables[0].Rows[0];}
+
+
+<form id="voucher_master_form"  name="voucher_master_form" role="form" action ="SaveVoucher" method="post">
+    <h6 align="center">ADJUSTMENT VOUCHER</h6>
+    
+        <div class="form-group" style="height:5px;display:none;">
+			<label class="control-label col-xs-3 text-right">id</label>
+			<input type="text" id="id" name="id" value="" />
+		</div>
+        <div class="row">
+       <div class="form-group">
+          <label class="control-label col-sm-2 text-right">Voucher Type</label>
+          <div class="col-md-2">
+            @Html.DropDownList("voctype", (SelectList)ViewBag.list)
+            
+          </div>
+          <label class="control-label col-sm-2 text-right">Voucher Date</label>
+          <div class="col-md-1">
+            <input type="text" id="vdate" class="datepicker" name="vdate" placeholder="vdate" value="" />
+          </div>
+      </div> 
+      </div>   
+      <div class="row">   
+        <div class="form-group">
+                <label class="control-label col-sm-2 text-right">Reference Number</label>
+                <div class="col-md-2">
+                    <input type="text" id="refnumber"  name="refnumber" placeholder="Reference Number" value="" />
+                </div>
+                <label class="control-label col-sm-2 text-right">Reference Date</label>
+                <div class="col-md-1">
+                    <input type="text" id="refdate" class="datepicker" name="refdate" placeholder="Reference Date" value="" />
+                </div>
+        </div>     
+        </div>
+    @{DataTable adjtab = Model.Tables["billdetails"];}
+    <div id="itemtable" class="row">
+          @{Html.RenderPartial("GetBillDetails",adjtab );}
+    </div>
+    <input type="submit" id="btnvoucher_master" class="btn btn-lg btn-success" value="Submit" disabled="disabled" />
+</form>

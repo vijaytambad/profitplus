@@ -1,0 +1,59 @@
+﻿@using System.Data;
+@{
+    ViewBag.Title = "Bpopay";
+}
+<script>
+
+    $(document).ready(function (e) {
+        $(".edit").click(function (e) {
+            var myurl = $(this).attr("href");
+            //alert(myurl);
+            $.ajax({
+                type: 'POST',
+                url: myurl,
+                success: function (res) {
+                    alert(res);
+                    $('.modal-dialog').html(res);
+                    $('#popup').show();
+                    // var bpon=
+
+                },
+                error: function (error) {
+                    $('.modal-dialog').html(error);
+                    $('#popup').show();
+                }
+            });
+        });
+    });
+</script>
+<div id="bpotable" class="">
+    <table id="mytable" class="table table-bordered table-condensed">
+        <thead>
+            <tr>
+               <td>id</td>
+               <td>Bpo Number</td>
+               <td>Account No.</td>
+               <td>Party Name</td>
+               <td>Transaction Amount</td>
+               <td>Paid Amount</td>
+               <td>Action</td>
+            </tr>
+        </thead>
+        <tbody>
+        @for (int i = 0; i < @Model.Rows.Count; i++)
+        {
+            
+            <tr>
+               <td>@Model.Rows[i]["id"]</td>
+               <td>@Model.Rows[i]["bponumber"]</td>
+               <td>@Model.Rows[i]["accountnumber"]</td>
+               <td>@Model.Rows[i]["partyname"]</td>
+               <td>@Model.Rows[i]["dramount"]</td>
+               <td>@Model.Rows[i]["paidamt"]</td>
+               <td><a data-toggle="modal" data-target="#popup" href="/Cash/EditBpo/@Model.Rows[i]["id"]" class="btn btn-sm btn-success edit" id="chequepay" >Pay Bpo</a></td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>
+

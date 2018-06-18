@@ -1,0 +1,31 @@
+﻿<div class="modal-header"> 
+            @ViewBag.tableheading
+        </div>
+        <table id="mytable" >
+            <thead>
+                <tr>
+                    <td>ID</td>
+                    <td>Party Name</td>
+                    <td>Voucher Number</td>
+                    <td>Voucher Date</td>
+                    <td>To Pay</td>
+                    <td>Select Voucher</td>
+                    <td style="width:1px;display:none"> Acc. No.</td>
+
+                </tr>
+            </thead>
+            <tbody>
+            @for (int i = 0; i < @Model.Tables[0].Rows.Count; i++)
+            {
+                <tr>
+                    <td> @Model.Tables[0].Rows[i]["id"]</td>
+                    <td> @Model.Tables[0].Rows[i]["partyname"]</td>
+                    <td> @Model.Tables[0].Rows[i]["voucherno"]</td>
+                    <td> @String.Format("{0:dd/MM/yyyy}", Model.Tables[0].Rows[i]["vodate"])</td>
+                    <td> @Model.Tables[0].Rows[i]["dueamount"]</td>
+                    <td> <input id="@Model.Tables[0].Rows[i]["id"]" type="checkbox" class="permit" /> </td>
+                    <td style="width:1px;display:none"> @Model.Tables[0].Rows[i]["accountnumber"]</td>
+                </tr>
+            }
+            </tbody>
+        </table>

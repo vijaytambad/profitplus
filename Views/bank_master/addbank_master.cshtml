@@ -1,0 +1,119 @@
+@using  System.Data;
+<script>
+$( document ).ready( function () {
+	$('#popup').on('hidden.bs.modal', function () {
+		location.reload();
+	});
+	$('#myimg').hide();
+    jQuery.validator.addMethod("lettersonly", function(value, element) 
+            {
+        return this.optional(element) || /^[a-z," "]+$/i.test(value);
+            }, "Letters only please");
+	$( '#bank_master_form' ).validate( {
+		submitHandler: function(form) {
+		var myurl=$('#bank_master_form').attr('action');
+		var mydata=$('#bank_master_form').serialize();
+		$('#popup').scrollTop(1);
+		$('#myimg').show();
+		alert(mydata);
+		$.ajax({
+			type:'POST',
+			url:myurl,
+			dataType:"text",
+			data:mydata,
+			success:function(res){
+				alert(res);
+				//$('#modal-dialog').html(res);
+				$('#popup').hide();
+				location.reload(true);
+			}
+		});
+		},
+			rules: {
+				bankname:{required:true,maxlength:70,lettersonly:true},
+                accountnumber:{required:true,maxlength:6},
+                bankaccno:{maxlength:20},
+                divid:{required:true },
+			},
+				
+			messages: {
+				bankname:{required:'This field is Compulsary',maxlength:'The Max Allowed Characters is 70',lettersonly:'Only Alphabets and Spaces Allowed'},
+                accountnumber:{required:'This field is Compulsary',maxlength:'The Max Allowed Characters is 6'},
+                bankaccno:{maxlength:'The Max Allowed Characters is 20'},
+                divid:{required:'This field is Compulsary'},
+			},
+			errorElement: "em",
+			errorPlacement: function ( error, element ) {
+				// Add the `help-block` class to the error element
+			error.addClass( "help-block errors" );
+			if ( element.prop( "type" ) === "checkbox" ) {
+				error.insertAfter( element.parent( "label" ) );
+			} else {
+				error.insertAfter( element );
+			}
+			},
+			highlight: function ( element, errorClass, validClass ) {
+				$( element ).parents( ".col-sm-5" ).addClass( "has-error" ).removeClass( "has-success" );
+			},
+			unhighlight: function (element, errorClass, validClass) {
+				$( element ).parents( ".col-sm-5" ).addClass( "has-success" ).removeClass( "has-error" );
+			}
+		});
+			
+});
+$.fn.modal.Constructor.prototype.enforceFocus = function() {};
+</script>
+@{DataRow dr=Model.Tables[0].Rows[0];}
+<div class="modal-content">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">&times;</button>
+      @ViewBag.DialogTitle
+  </div>
+  <div class="modal-body">
+	<div id="message" class="row"></div>
+    <form id="bank_master_form" name="bank_master_form" role="form" action ="save" >
+      <fieldset id="form_set">
+        		<div class="form-group" style="height:5px;display:none;">
+			<label class="control-label col-xs-3 text-right">bankid</label>
+        	<input type="text" id="bankid" name="bankid" value="@dr["bankid"]" />
+		</div>
+		<div class="form-group">
+			<label class="control-label col-xs-3 text-right">bankname</label>
+			<input type="text" id="bankname" name="bankname" placeholder="bankname" value="@dr["bankname"]" />
+		</div>
+				<div class="form-group">
+			<label class="control-label col-xs-3 text-right">accountnumber</label>
+        	@Html.DropDownList("accountnumber", (SelectList)ViewBag.account_master)
+		</div>
+		<div class="form-group">
+			<label class="control-label col-xs-3 text-right">bankaccno</label>
+			<input type="text" id="bankaccno" name="bankaccno" placeholder="bankaccno" value="@dr["bankaccno"]" />
+		</div>
+				<div class="form-group">
+			<label class="control-label col-xs-3 text-right">chequestart</label>
+			<input type="text" id="chequestart" name="chequestart" placeholder="chequestart" value="@dr["chequestart"]" />
+		</div>
+				<div class="form-group">
+			<label class="control-label col-xs-3 text-right">chequeend</label>
+			<input type="text" id="chequeend" name="chequeend" placeholder="chequeend" value="@dr["chequeend"]" />
+		</div>
+				<div class="form-group">
+			<label class="control-label col-xs-3 text-right">divid</label>
+        	@Html.DropDownList("divid", (SelectList)ViewBag.div_master)
+		</div>
+		<div class="form-group">
+			<label class="control-label col-xs-3 text-right">nextchequeno</label>
+			<input type="text" id="nextchequeno" name="nextchequeno" placeholder="nextchequeno" value="@dr["nextchequeno"]" />
+		</div>
+		
+        <input type="submit" id="btnbank_master" class="btn btn-lg btn-success" value="Submit" />
+      </fieldset>
+    </form>
+  </div>
+  <div class="modal-footer">
+
+  </div>
+</div>
+
+
+      

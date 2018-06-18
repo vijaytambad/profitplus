@@ -1,0 +1,140 @@
+﻿@{
+    ViewBag.Title = "listvoucher";
+    Layout = "~/Views/Shared/_Dashboard.cshtml";
+}
+
+<script type="text/javascript">
+    $(document).ready(function (e) {
+
+
+        var t = $('#example').DataTable({
+            paging: false,
+            bFilter: false,
+            bInfo: false
+        });
+
+        // add row
+        $('#addRow').click(function () {
+            //t.row.add( [1,2,3] ).draw();
+            var rowHtml = $("#newRow").find("tr")[0].outerHTML
+            console.log(rowHtml);
+            t.row.add($(rowHtml)).draw();
+        });
+ 
+        $('.close').click(function (e) {
+            $('#popup').hide();
+        });
+        $('#addrecord').click(function (e) {
+            e.preventDefault();
+            var myurl = $(this).attr('href');
+            //alert(myurl)
+            $.ajax({
+                type: 'POST',
+                url: myurl,
+                success: function (res) {
+                    //alert(res)
+                    $('.modal-dialog').html(res);
+                    $('#popup').show();
+                }
+            });
+        });
+
+        $('.edit').click(function (e) {
+            e.preventDefault();
+            var myurl = $(this).attr('href');
+            alert(myurl)
+            $.ajax({
+                type: 'POST',
+                url: myurl,
+                success: function (res) {
+                    //alert(res);
+                    $('.modal-dialog').html(res);
+                    $('#popup').show();
+                },
+                error: function (error) {
+                    $('.modal-dialog').html(error);
+                    $('#popup').show();
+                }
+            });
+        });
+
+        $('.delete').click(function (e) {
+            e.preventDefault();
+            var myurl = $(this).attr('href');
+            //alert(myurl)
+            $.ajax({
+                type: 'POST',
+                url: myurl,
+                success: function (res) {
+                    alert(res);
+                    $('#popup').hide();
+                    location.reload(true);
+                }
+            });
+        });
+
+    });
+</script>
+
+  <div class="modal fade" id="popup" role="dialog" style="width:60%;margin:5% auto;">
+    <div class="modal-dialog">
+        
+    </div>
+  </div> 
+
+
+<div class="row">
+<div class="panel col-sx-12" >
+	<div class="panel-heading text-center">
+		 <h6>@ViewData["TableHeading"]</h6>
+	</div>
+	
+	<div class="panel-body" >
+		<a class='modal-link btn-xs btn-success' id='addrecord' data-toggle='modal' data-target='#popup' href="@ViewData["addlink"]" >Add div_master</a>
+		<div class="table-responsive">
+		<table id="example" class="display" cellspacing="0" width="100%">
+  <thead>
+    <tr>
+      <th>Hidden</th>
+      <th>Display</th>
+      <th>Input</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Line 1 <input type="hidden" value="1"/> </td>
+      <td>VTap   <input type="hidden" value="Vtap"/> </td>
+      <td><input type="text" value="1"/> </td>
+    </tr>
+  </tbody>
+</table>
+<br/>
+<button id="addRow">Add New Row</button>
+
+<table id="newRow">
+  <tbody>
+    <tr >
+      <td>Line 2 <input type="hidden" value="2"/> </td>
+      <td>DVap   <input type="hidden" value="DVap"/> </td>
+      <td><input type="text" value="22"/> </td>
+    </tr>
+  </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+<!-- Post Info -->
+<div style='position:fixed;bottom:0;left:0; background:lightgray;width:100%;'>
+    About this SO question:
+    <a href='http://stackoverflow.com/a/25081588/1366033'>
+        How can I pass a html table row into DataTable.net fnAddData
+    </a>
+</div>
+

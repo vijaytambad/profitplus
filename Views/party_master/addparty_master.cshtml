@@ -1,0 +1,145 @@
+﻿@using  System.Data;
+<script>
+    $(document).ready(function () {
+        $('#popup').on('hidden.bs.modal', function () {
+            location.reload();
+        });
+        $('#myimg').hide();
+        jQuery.validator.addMethod("lettersonly", function (value, element) {
+            return this.optional(element) || /^[a-z," "]+$/i.test(value);
+        }, "Letters only please");
+        jQuery.validator.addMethod("AlphaNumeric", function (value, element) {
+            return this.optional(element) || /^[0-9a-z]+$/i.test(value);
+        }, "Letters only please");
+        $('#party_master_form').validate({
+            submitHandler: function (form) {
+                var myurl = $('#party_master_form').attr('action');
+                var mydata = $('#party_master_form').serialize();
+                $('#popup').scrollTop(1);
+                $('#myimg').show();
+                alert(mydata);
+                $.ajax({
+                    type: 'POST',
+                    url: myurl,
+                    dataType: "text",
+                    data: mydata,
+                    success: function (res) {
+                        alert(res);
+                        //$('#modal-dialog').html(res);
+                        $('#popup').hide();
+                        location.reload(true);
+                    }
+                });
+            },
+            rules: {
+                partyname: { required: true, maxlength: 50, lettersonly: true, remote: 'IsAvailable' },
+                shortname: { required: true, maxlength: 6 },
+                divid: { required: true },
+                divid: { required: true },
+                MobileNo: { maxlength: 10 },
+                GSTNo: { AlphaNumeric: true }
+
+            },
+
+            messages: {
+                partyname: { required: 'This field is Compulsary', maxlength: 'The Max Allowed Characters is 50', lettersonly: 'Only Alphabets and Spaces Allowed', remote: 'The Party Name Already Exists' },
+                shortname: { required: 'This field is Compulsary', maxlength: 'The Max Allowed Characters is 20'},
+                divid: { required: 'This field is Compulsary' },
+                divid: { required: 'This field is Compulsary' },
+                MobileNo: { maxlength: 'The Max Allowed digits is 10' },
+                GSTNo: { AlphaNumeric: 'Only Alphabets,Numbers and special characters are allowed' }
+            },
+            errorElement: "em",
+            errorPlacement: function (error, element) {
+                // Add the `help-block` class to the error element
+                error.addClass("help-block errors");
+                if (element.prop("type") === "checkbox") {
+                    error.insertAfter(element.parent("label"));
+                } else {
+                    error.insertAfter(element);
+                }
+            },
+            highlight: function (element, errorClass, validClass) {
+                $(element).parents(".col-sm-5").addClass("has-error").removeClass("has-success");
+            },
+            unhighlight: function (element, errorClass, validClass) {
+                $(element).parents(".col-sm-5").addClass("has-success").removeClass("has-error");
+            }
+        });
+
+    });
+$.fn.modal.Constructor.prototype.enforceFocus = function() {};
+</script>
+@{DataRow dr=Model.Tables[0].Rows[0];}
+<div class="modal-content">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">&times;</button>
+      @ViewBag.DialogTitle
+  </div>
+  <div class="modal-body">
+	<div id="message" class="row"></div>
+    <form id="party_master_form" name="party_master_form" role="form" action ="save" >
+      <fieldset id="form_set">
+        		<div class="form-group" style="height:5px;display:none;">
+			<label class="control-label col-xs-3 text-right">partyid</label>
+        	<input type="text" id="partyid" name="partyid" value="@dr["partyid"]" />
+		</div>
+		<div class="form-group">
+			<label class="control-label col-xs-3 text-right">partyname</label>
+			<input type="text" id="partyname" name="partyname" placeholder="partyname" value="@dr["partyname"]" />
+		</div>
+				<div class="form-group">
+			<label class="control-label col-xs-3 text-right">divid</label>
+        	@Html.DropDownList("divid", (SelectList)ViewBag.div_master)
+		</div>
+		<div class="form-group">
+			<label class="control-label col-xs-3 text-right">sectionid</label>
+        	@Html.DropDownList("sectionid", (SelectList)ViewBag.section_master)
+		</div>
+        <div class="form-group">
+			<label class="control-label col-xs-3 text-right">Address</label>			
+            <textarea rows="4" cols="20" id="Address" name="Address" placeholder="Address" value="@dr["Address"]"> </textarea>
+		</div>
+           <div class="form-group">
+			<label class="control-label col-xs-3 text-right">City</label>
+			<input type="text" id="city" name="city" placeholder="city" value="@dr["city"]" />
+		</div>
+        <div class="form-group">
+			<label class="control-label col-xs-3 text-right">State</label>
+			<input type="text" id="state" name="state" placeholder="state" value="@dr["state"]" />
+		</div>
+        <div class="form-group">
+			<label class="control-label col-xs-3 text-right">Pin-Code</label>
+			<input type="text" id="pincode" name="pincode" placeholder="pincode" value="@dr["pincode"]" />
+		</div>
+         <div class="form-group">
+			<label class="control-label col-xs-3 text-right">Mobile.No</label>
+			<input type="text" id="MobileNo" name="MobileNo" placeholder="MobileNo" value="@dr["MobileNo"]" />
+		</div>
+         <div class="form-group">
+			<label class="control-label col-xs-3 text-right">Phone.No</label>
+			<input type="text" id="PhoneNo" name="PhoneNo" placeholder="PhoneNo" value="@dr["PhoneNo"]" />
+		</div>
+         <div class="form-group">
+			<label class="control-label col-xs-3 text-right">GST.No</label>
+			<input type="text" id="GSTNo" name="GSTNo" placeholder="GSTNo" value="@dr["GSTNo"]" />
+		</div>
+         <div class="form-group">
+			<label class="control-label col-xs-3 text-right">TAN.No</label>
+			<input type="text" id="TANNo" name="TANNo" placeholder="TANNo" value="@dr["TANNo"]" />
+		</div>
+        <div class="form-group">
+			<label class="control-label col-xs-3 text-right">PAN.No</label>
+			<input type="text" id="PANNo" name="PANNo" placeholder="PANNo" value="@dr["PANNo"]" />
+		</div>
+        <input type="submit" id="btnparty_master" class="btn btn-lg btn-success" value="Submit" />
+      </fieldset>
+    </form>
+  </div>
+  <div class="modal-footer">
+
+  </div>
+</div>
+
+
+      

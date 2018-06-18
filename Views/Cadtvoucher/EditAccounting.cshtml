@@ -1,0 +1,108 @@
+﻿ @using System.Data;
+ <script type="text/javascript">
+     $(document).ready(function (e) {
+
+         $('#editdetails').validate({
+             submitHandler: function (form) {
+                 var myurl = "savebilldetail";
+                 var mydata = $('#editdetails').serialize();
+                 //$('#popup').scrollTop(1);
+                 //$('#myimg').show();
+             //    alert(myurl);
+                 $.ajax({
+                     type: 'POST',
+                     url: myurl,
+                     dataType: "text",
+                     data: mydata,
+                     success: function (res) {
+                         alert(res);
+                         $('#itemtable').html(res);
+                     }
+                 });
+             },
+             rules: {
+             },
+
+             messages: {
+             },
+             errorElement: "em",
+             errorPlacement: function (error, element) {
+                 // Add the `help-block` class to the error element
+                 error.addClass("help-block errors");
+                 if (element.prop("type") === "checkbox") {
+                     error.insertAfter(element.parent("label"));
+                 } else {
+                     error.insertAfter(element);
+                 }
+             },
+             highlight: function (element, errorClass, validClass) {
+                 $(element).parents(".col-sm-5").addClass("has-error").removeClass("has-success");
+             },
+             unhighlight: function (element, errorClass, validClass) {
+                 $(element).parents(".col-sm-5").addClass("has-success").removeClass("has-error");
+             }
+         });
+
+     });
+     var tid = setInterval(enablebutton, 1000);
+     function enablebutton() {
+
+         var totdb = parseFloat($('#totdb').val());
+         var totcr = parseFloat($('#totcr').val());
+         if (totdb == totcr && totdb > 0) {
+             $('#btnvoucher_master').removeAttr("disabled");
+         }
+         else {
+             $('#btnvoucher_master').Attr("disabled", "disabled");
+         }
+     }
+</script>
+@{DataRow mydr = ViewBag.data;}
+
+<form id="editdetails" name="editdetails" role="form" action="savebilldetail">
+ <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body">
+        <br />
+        <div class="form-group">
+			<label class="control-label col-xs-3 text-right">Sl.No</label>
+			<input type="text" id="id" name="id" placeholder="id" value="@mydr["id"]" readonly/>
+		</div>
+         <div class="form-group">
+			<label class="control-label col-xs-3 text-right">Type</label>
+			<input type="text" id="type" name="type" placeholder="type" value="@mydr["type"]" readonly />
+		</div>
+          <div class="form-group">
+			<label class="control-label col-xs-3 text-right">Account.No</label>
+			<input type="text" id="accountnumber" name="accountnumber" placeholder="accountnumber" value="@mydr["accountnumber"]" readonly />
+		</div>
+        @if(@mydr["type"].Equals("DB"))
+        {
+          <div class="form-group">
+			<label class="control-label col-xs-3 text-right">DB</label>
+			<input type="text" id="dramount" name="dramount" placeholder="dramount" value="@mydr["dramount"]"  />
+		</div>
+            <div class="form-group">
+			<label class="control-label col-xs-3 text-right">CREDIT AMT</label>
+			<input type="text" id="cramount" name="cramount" placeholder="cramount" value="@mydr["cramount"]" readonly />
+		</div>
+        }
+        else
+        { 
+        <div class="form-group">
+			<label class="control-label col-xs-3 text-right">DB</label>
+			<input type="text" id="dramount" name="dramount" placeholder="dramount" value="@mydr["dramount"]" readonly />
+		</div>
+            <div class="form-group">
+			<label class="control-label col-xs-3 text-right">CREDIT AMT</label>
+			<input type="text" id="cramount" name="cramount" placeholder="cramount" value="@mydr["cramount"]"  />
+		</div>       
+         }
+        </div>
+        <div class="modal-footer">
+         <input type="submit" id="" class="btn btn-lg btn-success" value="Submit" />
+        </div> 
+      </div>
+</form>

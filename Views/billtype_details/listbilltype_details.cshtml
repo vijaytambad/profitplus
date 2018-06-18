@@ -1,0 +1,118 @@
+@using System.Data;
+@{
+    Layout = "~/Views/Shared/_Dashboard.cshtml";
+}
+	
+<script type="text/javascript">
+$(document).ready(function(e) {
+	$('.close').click(function (e) {
+            $('#popup').hide();
+    });
+	$('#addrecord').click(function(e){
+		e.preventDefault();
+		var myurl=$(this).attr('href');	
+		//alert(myurl)
+		$.ajax({
+			type:'POST',
+			url:myurl,
+			success:function(res){
+				//alert(res)
+				$('.modal-dialog').html(res);
+				$('#popup').show();
+			}
+		});
+	});
+	
+	$('.edit').click(function(e){
+		e.preventDefault();
+		var myurl=$(this).attr('href');	
+		//alert(myurl)
+		$.ajax({
+			type:'POST',
+			url:myurl,
+			success:function(res){
+				//alert(res);
+				$('.modal-dialog').html(res);
+				$('#popup').show();
+			},
+			error:function(error){
+				$('.modal-dialog').html(error);
+				$('#popup').show();
+			}
+		});
+	});
+	
+	$('.delete').click(function(e){
+		e.preventDefault();
+		var myurl=$(this).attr('href');	
+		//alert(myurl)
+		$.ajax({
+			type:'POST',
+			url:myurl,
+			success:function(res){
+				alert(res);
+				$('#popup').hide();
+				location.reload(true);
+			}
+		});
+	});
+	
+});
+</script>
+
+  <div class="modal fade" id="popup" role="dialog" style="width:60%;margin:5% auto;">
+    <div class="modal-dialog">
+        
+    </div>
+  </div> 
+
+
+<div class="row>
+<div class="panel col-sx-12" >
+	<div class="panel-heading text-center">
+		 <h6>@ViewData["TableHeading"]</h6>
+	</div>
+	
+	<div class="panel-body" >
+		<a class='modal-link btn-xs btn-success' id='addrecord' data-toggle='modal' data-target='#popup' href="@ViewData["addlink"]" >Add billtype_details</a>
+		<div class="table-responsive">
+		<table  class="table table-bordered table-condensed"  id="tblbilltype_details">
+			<thead> <!-- ;$html.= count($headings); -->
+				<tr class="h6">
+					@for(int i=0;i<@Model.Tables["billtype_details"].Columns.Count;i++)
+					{
+						<td>@Model.Tables["billtype_details"].Columns[i].ColumnName</td>
+					} 
+					<td>Actions</td>
+                </tr>
+			</thead>
+			<tbody>
+				<tr> 
+					@for(var i=0;i<Model.Tables["billtype_details"].Rows.Count;i++){
+						<tr>
+						@for (int j = 0; j < Model.Tables["billtype_details"].Columns.Count; j++)
+						{
+							String datatype = @Model.Tables["billtype_details"].Columns[j].DataType.ToString();
+							String classname = "text-left";
+							if (datatype == "int") classname = "text-right"; 
+							<td class="@classname">@Model.Tables["billtype_details"].Rows[i].ItemArray[j] </td>
+						}
+						<td><a  href="billtype_detailsEdit/@Model.Tables["billtype_details"].Rows[i]["id"]" data-toggle="modal" data-target="#popup" id="edit" class="modal-link btn-xs btn-success edit">Edit</a>
+						<a  href="billtype_detailsdelete/@Model.Tables["billtype_details"].Rows[i]["id"]" data-toggle="modal" data-target="#popup" id="delete" class="modal-link btn-xs btn-success delete">Delete</a></td>
+						
+						</tr>
+					}
+			</tbody>
+			
+		</table>
+		</div>
+        
+	</div> 
+	<div>
+		@{if (ViewBag.pageLinks != "")
+		{
+			@Html.Raw(ViewBag.pageLinks);
+		}
+   }
+	</div>
+</div>	

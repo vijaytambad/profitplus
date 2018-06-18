@@ -1,0 +1,155 @@
+﻿@using System.Data;
+@{
+    ViewBag.Title = "addRadtVoucher";
+    Layout = "~/Views/Shared/_Dashboard.cshtml";
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $('#popup').on('hidden.bs.modal', function () {
+            location.reload();
+        });
+        jQuery.validator.addMethod("alphanumeric", function (value, element) {
+            // return this.optional(element) || /^\w+$/i.test(value);
+            return this.optional(element) || /^[\w\d\/]+$/i.test(value);
+        }, "Letters, numbers, spaces or underscores only please");
+        $("#billtypeid").on("change", function () {
+            var myurl = "GetBillDetails?billid=" + $('#billtypeid').val();
+            $.ajax(
+            {
+                type: 'POST',
+                url: myurl,
+                dataType: "text",
+                success: function (data) {
+                    $("#itemtable").html(data);
+                },
+                error: function () {
+                    alert("error");
+                }
+            });
+        });
+
+        $('#RadtVoucher').validate({
+            submitHandler: function (form) {
+                var myurl = $('#RadtVoucher').attr("action");
+                var mydata = $('#RadtVoucher').serialize();
+                //$('#popup').scrollTop(1);
+                //$('#myimg').show();
+                alert(myurl);
+                $.ajax({
+                    type: 'Post',
+                    url: myurl,
+                    dataType: "text",
+                    data:mydata,
+                    success: function (res) {
+                        alert(res);
+                        //$('#itemtable').html(res);
+                    }
+                });
+            },
+            rules: {
+                billtypeid: { required: true },
+                partyid: { required: true },
+                vdate: { date: true },
+                billNo: { alphanumeric: true }
+            },
+
+            messages: {
+                billtypeid: { required: 'This field is Compulsary' },
+                partyid: { required: 'This Field is compulsary' },
+                vdate: { date: 'This Field is compulsary' },
+                billNo: { alphanumeric: 'Only Alphabet and Numbers are allowed' }
+            },
+            errorElement: "em",
+            errorPlacement: function (error, element) {
+                // Add the `help-block` class to the error element
+                error.addClass("help-block errors");
+                if (element.prop("type") === "checkbox") {
+                    error.insertAfter(element.parent("label"));
+                } else {
+                    error.insertAfter(element);
+                }
+            },
+            highlight: function (element, errorClass, validClass) {
+                $(element).parents(".col-sm-5").addClass("has-error").removeClass("has-success");
+            },
+            unhighlight: function (element, errorClass, validClass) {
+                $(element).parents(".col-sm-5").addClass("has-success").removeClass("has-error");
+            }
+
+        });
+
+    });
+			
+
+</script>
+@{DataRow dr=Model.Tables[0].Rows[0];}
+
+    <form id="RadtVoucher" name="RadtVoucher" role="form" action ="savevoucher" >
+    <h6 align="center">RADT VOUCHER</h6>
+    <br />
+      <fieldset id="form_set">
+        	<div class="container">
+        <div class="row">
+        <div class="col-sm-4">
+         <div class="form-group">
+		<label for="billtypeid">BILLTYPE:</label>           
+        @Html.DropDownList("billtypeid", (SelectList)ViewBag.billtype_master,"select billtype") 
+        </div>
+    </div>
+    <div class="col-sm-4">
+    <div class="form-group">
+        
+        <label for="partyid">PARTY NAME:</label>
+        @Html.DropDownList("partyid", (SelectList)ViewBag.party_master,"select party")
+         </div>
+    </div>
+        <div class="col-sm-4">
+       <div class="form-group">
+        <label for="depotid">DEPOT NAME:</label>
+        @Html.DropDownList("depotid", (SelectList)ViewBag.depot_master,"select depot")
+         </div>
+    </div>
+   
+   
+     <script type="text/javascript">
+
+         $(function () {
+             $("#vdate").datepicker({
+                 dateFormat: 'yy-mm-dd',
+                 changeMonth: true,
+                 changeYear: true
+             });
+
+         });
+           </script>
+             <div class="col-sm-4">
+             <div class="form-group" style="display:none;">
+			<label for="id">id</label>
+        	<input type="text" id="id" name="id" value="" />
+		    </div>   
+            </div>
+           
+            <div class="col-sm-8">
+            <div class="form-group">
+            <div class="bootstrap-datepicker-widget">
+            <label for="vdate">DATE:</label>
+	        <input type="text" id="vdate" name="vdate" placeholder="vdate" value="" />
+            </div>    
+            </div>	
+            </div> 
+       
+            </div>
+             </div>
+
+          </fieldset>
+        
+
+  <div id="itemtable" class="row">
+
+        </div>
+
+       <input type="submit" id="btnvoucher_master" class="btn btn-lg btn-success" value="Submit" disabled="disabled" />
+        </form>
+
+

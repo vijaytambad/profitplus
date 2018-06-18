@@ -1,0 +1,57 @@
+﻿@using System.Data;
+@{
+    ViewBag.Title = "addradtVoucher";
+    Layout = "~/Views/Shared/_Dashboard.cshtml";
+}
+<script>
+    $(document).ready(function (e) {
+        $('#btnfind').click(function (e) {
+            e.preventDefault();
+            alert("Hello");
+            //var myurl = $('#frmcadtbpo').attr("action");
+            $.ajax({
+                type: 'POST',
+                url: "/CadtBpo/findbpo",
+                dataType: "text",
+                success: function (res) {
+                    alert(res);
+                    $("#mytable").html(res);
+                    //$('#popup').show();
+                }
+            });
+        });
+
+        
+    });
+
+</script>
+
+<form class="form-inline" role="form"  method="post" name="frmcadtbpo" id="frmcadtbpo">
+    <div class="row col-xs-offset-1">
+       <div class="form-group">
+          <label for="BpoType">BPo Type</label>
+	      <input type="text" class="form-control1" id="bpotype" placeholder="Enter name" value="">
+        </div>
+        <div class="form-group">
+          <label for="payinstructions">Payment type</label>
+	      <input type="text" class="form-control1" id="paytype" name="paytype" placeholder="Enter Sub Type" value="">
+        </div>
+    
+        <div class="form-group">
+          <label for="bpodate">Bpo Date</label>
+	      <input type="text" class="form-control1" id="btpdate" name="bpodate" placeholder="Enter Date">
+       </div>
+   </div>
+    <div class="row col-xs-offset-1">
+       <div class="form-group">
+          <label for="billno">Bill Number</label>
+	      <input type="text" id="billno" name="billno" placeholder="Enter Bill Number" value="">
+       </div>
+    </div>
+   <button data-toggle='modal' data-target='#popup' type="submit" class="btn btn-default" id="btnfind" >Register</button> 
+   <div id="mytable">
+        
+   </div>
+    
+    
+</form>

@@ -1,0 +1,107 @@
+﻿@{
+    ViewBag.Title = "cash";
+    Layout = "~/Views/Shared/_Dashboard.cshtml";
+}
+
+<script>
+    $(document).ready(function (e) {
+        $('#btnfind').click(function (e) {
+            e.preventDefault();
+            var myurl = "/cash/findbpo?vtype=" + $('#vtype').val();
+            //alert(myurl)
+            $.ajax({
+                type: 'POST',
+                url: myurl,
+                success: function (res) {
+                    // alert(res);
+                    $('.modal-dialog').html(res);
+                    $('#popup').show();
+                    // var bpon=
+
+                },
+                error: function (error) {
+                    $('.modal-dialog').html(error);
+                    $('#popup').show();
+                }
+            });
+        });
+
+        $('#frmvocno').validate({
+
+            submitHandler: function (form) {
+                var myurl = $('#frmvocno').attr("action");
+                var mydata = $('#frmvocno').serialize();
+                //alert("hello");
+                $.ajax({
+                    type: 'post',
+                    url: myurl,
+                    dataType: "text",
+                    data: mydata,
+                    success: function (res) {
+                        //alert(res);
+                        $('#bpolist').html(res);
+                    }
+                });
+            },
+            rules: {
+
+                //txtvocno: { remote: 'ValidateVono' }
+
+            },
+
+            messages: {
+
+                //txtvocno: { remote: 'Invalid Voucher No.' }
+
+            },
+            errorElement: "em",
+            errorPlacement: function (error, element) {
+                // Add the `help-block` class to the error element
+                error.addClass("help-block errors");
+                if (element.prop("type") === "checkbox") {
+                    error.insertAfter(element.parent("label"));
+                } else {
+                    error.insertAfter(element);
+                }
+            },
+            highlight: function (element, errorClass, validClass) {
+                $(element).parents(".col-sm-5").addClass("has-error").removeClass("has-success");
+            },
+            unhighlight: function (element, errorClass, validClass) {
+                $(element).parents(".col-sm-5").addClass("has-success").removeClass("has-error");
+            }
+
+        });
+
+        $("#paybtn").click(function (e) {
+            var myurl = $("#paybtn").attr("href");
+            alert(myurl);
+        });
+
+    });
+    
+</script>
+
+<h2>editradtvoucher</h2>
+<form id="frmvocno" class="form-inline" name="frmvocno" role="form" action ="/Cash/GetCashPay" method="post">
+    <fieldset id="form_set">
+        <div class="form-group" >
+			<label for="invoice">VOUCHER.NO:</label>
+			<input type="text" id="txtvocno" name="txtvocno" placeholder="Bpo Number" value="" />
+            <a class='modal-link btn-xs btn-success' id='btnfind' data-toggle='modal' data-target='#popup' href="#" >Find Bpo</a>
+            
+        </div>
+        <input type="hidden" value="@ViewBag.vtype" id="vtype" name="vtype" />
+    </fieldset>
+
+
+<div id="bpolist">
+    
+</div>
+<a href="/cash/savecash" class="btn btn-sm btn-success" id="paybtn" name="paybtn">Submit</a>
+</form>
+<div class="modal fade" id="popup" role="dialog" style="max-height:600px;height:400px;margin:5% auto;overflow-y:scroll;overflow-x:scroll;">
+    <div class="modal-dialog modal-lg " >
+        
+    </div>
+  </div>

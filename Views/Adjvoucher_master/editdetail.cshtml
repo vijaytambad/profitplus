@@ -1,0 +1,142 @@
+﻿@using System.Data;
+<script>
+
+    $(document).ready(function (e) {
+
+        $('#billdetail').validate({
+            submitHandler: function (form) {
+                var myurl = "savebilldetail";
+                var mydata = $('#billdetail').serialize();
+                //$('#popup').scrollTop(1);
+                //$('#myimg').show();
+                //alert(myurl);
+                $.ajax({
+                    type: 'POST',
+                    url: myurl,
+                    dataType: "text",
+                    data: mydata,
+                    success: function (res) {
+                        //alert(res);
+                        $('#itemtable').html(res);
+
+                    }
+                });
+            },
+            rules: {
+            },
+
+            messages: {
+            },
+            errorElement: "em",
+            errorPlacement: function (error, element) {
+                // Add the `help-block` class to the error element
+                error.addClass("help-block errors");
+                if (element.prop("type") === "checkbox") {
+                    error.insertAfter(element.parent("label"));
+                } else {
+                    error.insertAfter(element);
+                }
+            },
+            highlight: function (element, errorClass, validClass) {
+                $(element).parents(".col-sm-5").addClass("has-error").removeClass("has-success");
+            },
+            unhighlight: function (element, errorClass, validClass) {
+                $(element).parents(".col-sm-5").addClass("has-success").removeClass("has-error");
+            }
+        });
+
+        $("#trtype").change(function (e) {
+            e.preventDefault();
+            //alert($("#trtype").val());
+            $("#cramount").removeAttr("readonly");
+            $("#dramount").removeAttr("readonly");
+            if ($("#trtype").val() == "CR") {
+                $("#dramount").val("0");
+                $("#dramount").attr("readonly", true);
+            }
+            if ($("#trtype").val() == "DB") {
+                $("#cramount").val("0");
+                $("#cramount").attr("readonly", true);
+
+            }
+        });
+
+    });
+
+    var tid = setInterval(enablebutton, 1000);
+    function enablebutton() {
+        var totdr = parseFloat($('#totdr').val());
+        var totcr = parseFloat($('#totcr').val());
+        //alert("Credit= " + totcr.toString() + "Debit = " + totdr.toString());
+        if (totdr == totcr && totdr > 0)
+            $('#btnvoucher_master').removeAttr("disabled");
+        else
+            $('#btnvoucher_master').attr("disabled","disabled");
+    }
+</script>
+
+@{DataRow mydr = ViewBag.row;}
+    @{double dramt = 0;
+      double cramt = 0;
+      if (mydr["dramount"] != DBNull.Value){
+          dramt = Convert.ToDouble(mydr["dramount"]);}
+      if (mydr["cramount"] != DBNull.Value)
+      {
+          cramt = Convert.ToDouble(mydr["cramount"]);
+      }
+      }
+      <!-- Modal content-->
+     
+    
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body">
+        <br />
+        <form class="form" id="billdetail" name="billdetail" action="savebilldetail" role="form">
+        <div class="form-group">
+			<label class="control-label col-xs-3 text-right">Sno</label>
+			<input type="text" id="id" name="id" placeholder="id" value="@mydr["id"]" readonly />
+		</div>
+         <div class="form-group">
+			<label class="control-label col-xs-3 text-right">Type</label>
+			@Html.DropDownList("trtype", (SelectList)ViewBag.list)
+		</div>
+         <div class="form-group">
+			<label class="control-label col-xs-3 text-right">Account No.</label>
+			@Html.DropDownList("accountnumber", (SelectList)ViewBag.account_master)
+		</div>
+        @mydr["type"];
+        @if(@mydr["type"].Equals("DR")){
+          <div class="form-group">
+			<label class="control-label col-xs-3 text-right">DEBIT AMT</label>
+            
+			    <input type="text" id="dramount" name="dramount" placeholder="Debit Amount" value="@dramt"  />
+            </div>
+            <div class="form-group">
+			<label class="control-label col-xs-3 text-right">CREDIT AMT</label>
+			    <input type="text" id="cramount" name="cramount" placeholder="Debit Amount" value="@cramt" readonly />
+		    </div>
+            }
+            else
+            {
+                <div class="form-group">
+			    <label class="control-label col-xs-3 text-right">DEBIT AMT</label>
+                <input type="text" id="dramount" name="dramount" placeholder="Debit Amount" value="@dramt" readonly  />
+                </div>
+                <div class="form-group">
+			<label class="control-label col-xs-3 text-right">CREDIT AMT</label>
+			    <input type="text" id="cramount" name="cramount" placeholder="Debit Amount" value="@cramt" />
+		    </div>
+            }
+		
+       
+        <div class="modal-footer">
+         <input type="submit" id="btnsubmit" class="btn btn-lg btn-success" value="Submit" />
+        </div> 
+        </form>
+         </div>
+      </div>
+      
+    

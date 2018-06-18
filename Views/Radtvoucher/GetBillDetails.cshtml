@@ -1,0 +1,78 @@
+﻿@using System.Data;
+@{
+    ViewBag.Title = "GetBillDetails";
+ 
+}
+<script type="text/javascript">
+    $(document).ready(function (e) {
+
+        $('.edit').click(function (e) {
+            e.preventDefault();
+            var myurl = $(this).attr('href');
+            alert(myurl)
+            $.ajax({
+                type: 'POST',
+                url: myurl,
+                //   alert(myurl)
+                success: function (res) {
+                    //alert(res);
+                    $('.modal-dialog').html(res);
+                    $('#myModal').show();
+                }
+            });
+        });
+    });
+</script>
+<div class="row" style="overflow-y:scroll;height:320px;width:98%;padding-left:15px;">
+<table class="table table-bordered table-condensed">
+<thead>
+<tr>
+@foreach(String hd in ViewBag.tblheader)
+{
+    <td> @hd</td>    
+}
+
+</tr>
+</thead>
+<tbody>
+@for (int i = 0; i < @Model.Rows.Count; i++)
+{ 
+<tr>
+<td>@Model.Rows[i]["id"]</td>
+<td>@Model.Rows[i]["type"]</td>
+<td>@Model.Rows[i]["accountnumber"]</td>
+<td>@Model.Rows[i]["dramount"]</td>
+<td>@Model.Rows[i]["cramount"]</td>
+<td><a  href="EditDetails/?slno=@Model.Rows[i]["id"]" data-toggle="modal" data-target="#myModal"  id="edit" class="modal-link btn-xs btn-success edit">Edit</a></td>
+</tr>
+
+}
+
+</tbody>
+
+</table>
+</div>
+<div class="row">
+<table class="table table-condensed">
+<tr>
+<td></td>
+<td>Total Debits</td>
+<td><input type="text" id="totdb" name="totaldb" value="@ViewBag.TotatDb" readonly /></td>
+<td>Total Credits</td>
+<td><input type="text" id="totcr" name="totcr" value="@ViewBag.TotalCr" readonly /></td>
+</tr>
+</table>
+</div>
+
+
+ <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+    
+   
+     
+      
+    </div>
+  </div>
+  
+
+

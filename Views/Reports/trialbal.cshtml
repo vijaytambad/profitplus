@@ -1,0 +1,35 @@
+﻿
+<div class="row">
+<label class="col-xs-12 text-center" >Trial Balance For The Month </label>
+</div>
+<div id="receiptpayment" class="col-xs-12">
+    
+
+    <form id="rpform" action="/reports/trialbal" method="post">
+        <div class="row">
+            <label class="col-xs-3 text-right">Month</label>
+             <select class="col-xs-2" name="mon">
+                
+                @{String[] mon = { "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12" };}
+                @{String[] monstr = { "January", "Febraury", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };}
+                @for (int j =0; j < mon.Length; j++)
+                { 
+                    <option>@mon[j]</option>
+                }
+             </select>
+             <label class="col-xs-3 text-right"> Year </label>
+            <select class="col-xs-2" name="year">
+                @{int myear = DateTime.Today.Year;}
+                @for (int i = -5; i < 5; i++)
+                { 
+                    <option>@(myear+i)</option>
+                }
+            </select>
+        
+        </div>
+        <div class="row">
+            
+            <input type="submit" name="submit" id="submit" class="modal-link btn-xs btn-success" />
+        </div>
+    </form>
+</div>

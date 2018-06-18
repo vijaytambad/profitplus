@@ -1,0 +1,64 @@
+﻿@using System.Data;
+<script type="text/javascript">
+    $(document).ready(function (e) {
+        $("#btnsubmit").click(function (e) {
+            e.preventDefault();
+            var chk = $('.permit:checkbox:checked');
+            //alert(chk)
+            var chkval = "";
+            $('.permit:checkbox:checked').each(function () {
+                chkval += $(this).attr("id") + "|";
+                //alert(chkval)
+            });
+            var myurl = "/user_types/savepermissions?chkids=" + chkval + "&uid=" + $('#usertypeid').val();
+            alert(myurl);
+            $.ajax({
+                type: 'POST',
+                url: myurl,
+                success: function (res) {
+                    alert(res);
+                    $('#popup').hide(); location.reload(true);
+                    //$('#mymneu').html(res);
+
+                }
+            });
+
+        });
+
+
+    });
+</script>
+<div class="modal-content">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">&times;</button>
+        @ViewBag.PageTitle
+    </div>
+    <div class="modal-body" style="height:500px;overflow-y:scroll">
+    <div ><input type="text" id="usertypeid" value="@ViewBag.usertypeid" /></div>
+    <form id="permission_form" action="/user_types/savepermissions" method="post" role="form">
+    <table>
+        <thead>
+            <tr>
+                <td> <h6> Name</h6></td> 
+                <td> <h6>Permitted </h6></td>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < @Model.Tables["Permissions"].Rows.Count; i++) {
+                String chk = "";
+                if (@Model.Tables["Permissions"].Rows[i]["checked"] == 1) { chk = "checked=checked"; }
+                <tr>
+                    <td>@Model.Tables["Permissions"].Rows[i]["menuname"]</td>
+                    <td><input type="checkbox" id="@Model.Tables["Permissions"].Rows[i]["menuid"]" name="permitchk" class="permit" @chk /></td>
+                </tr>   
+            }
+        </tbody>
+    </table>
+    <div class="modal-footer">
+        <button type="button" id="btnsubmit" name="btnsubmit">Save Permissions</button>
+    </div>
+    </form>
+ 
+    </div>
+</div>
+

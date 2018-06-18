@@ -1,0 +1,32 @@
+﻿<script>
+    $(function () {
+        $(".datepicker").datepicker({
+            dateFormat: 'dd-mm-yy',
+            changeMonth: true,
+            changeYear: true
+        });
+    });
+
+
+</script>
+<div class="row">
+<label class="col-xs-12 text-center" >Report For The Period</label>
+</div>
+<div id="receiptpayment" class="col-xs-12">
+    
+
+    <form id="rpform" action="/reports/printrp" method="post">
+        <div class="row">
+            <label class="col-xs-4"> Start Date </label>
+            <input type="text" name="stdate" id="stdate" class="datepicker" />
+        </div>
+        <div class="row">
+            <label class="col-xs-4"> End Date </label>
+            <input type="text" name="edate" id="etdate" class="datepicker" />
+        </div>
+        <div class="row">
+            
+            <input type="submit" name="submit" id="submit" class="modal-link btn-xs btn-success" />
+        </div>
+    </form>
+</div>

@@ -1,0 +1,42 @@
+modification required
+add field divid in cash_trans
+make required modification in cash module
+
+index required
+1.	account transaction
+	1.	Account Number
+	2.	Transaction date
+
+2.	account_master
+	1.	accountnumber
+	2.	parentid
+	3.	groupid
+	4.	sectionid
+	
+3.	billtype_master
+	1.	billtypeid
+	2.	divid
+	
+4.	1.	bponumber
+	2.	bpodate
+	3.	divid
+	
+5	bpo_trans
+	1.	bponumber
+	2.	voucherno
+	3.	divid
+	
+6.	cash_master
+	1.	cashid
+	2.	bponumber
+	
+7.	cash_trans
+	1.	cashid
+	2.	chequedate
+	3.	divid
+	
+8.	voucher_master
+	1.	voucherno
+	2.	vodate
+	3.	divid
+	

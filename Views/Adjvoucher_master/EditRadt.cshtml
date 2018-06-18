@@ -1,0 +1,19 @@
+﻿@using System.Data;
+@{
+    Layout = "~/Views/Shared/_Dashboard.cshtml";
+}
+
+@{DataTable vmast=ViewBag.vocmast;}
+@{DataSet ds =new DataSet();
+  ds.Tables.Add(vmast);
+}
+@{DataTable bdt=ViewBag.billdetails;}
+@{Html.RenderPartial("editvoucher_master",ds);}
+  <div id="itemtable" class="row">
+    @{Html.RenderPartial("GetBillDetails",bdt);}
+ </div>
+ <script>
+     $('#btnvoucher_master').removeAttr("disabled");
+</script>
+
+

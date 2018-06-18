@@ -1,0 +1,37 @@
+﻿@using System.Data;
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Dashboard.cshtml";
+}
+<script>
+    
+    $(document).ready(function (e) {
+        $('.mylink').click(function (e) {
+            e.preventDefault();
+            var myurl = $(this).attr("href");
+           // alert(myurl);
+            $.ajax({
+                type: "POST",
+                url: myurl,
+                success: function (res) {
+                    //alert("hello");
+                    $("#repform").html(res);
+                }
+            });
+        });
+    });
+</script>
+<div class="row">
+    <div id="reportlist" class="col-xs-5">
+        @for (int i=0; i < @Model.Rows.Count; i++)
+        {
+            <div class="col-xs-12" style="background-color:Navy;height:40px;vertical-align:middle">
+                <a id="rpstatement" class="mylink" href="@Model.Rows[i]["link"].ToString()" style="color:White;">@Model.Rows[i]["id"].ToString()     @Model.Rows[i]["RepName"]</a>
+            </div>
+        }
+    </div>
+    <div id="repform" class="col-xs-7">
+
+    </div>
+</div>
+

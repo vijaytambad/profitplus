@@ -1,0 +1,89 @@
+@using  System.Data;
+<script>
+$( document ).ready( function () {
+	$('#popup').on('hidden.bs.modal', function () {
+		location.reload();
+	});
+	$('#myimg').hide();
+     jQuery.validator.addMethod("lettersonly", function(value, element) 
+            {
+        return this.optional(element) || /^[a-z," "]+$/i.test(value);
+            }, "Letters only please");
+	$( '#user_types_form' ).validate( {
+		submitHandler: function(form) {
+		var myurl=$('#user_types_form').attr('action');
+		var mydata=$('#user_types_form').serialize();
+		$('#popup').scrollTop(1);
+		$('#myimg').show();
+		alert(mydata);
+		$.ajax({
+			type:'POST',
+			url:myurl,
+			dataType:"text",
+			data:mydata,
+			success:function(res){
+				alert(res);
+				//$('#modal-dialog').html(res);
+				$('#popup').hide();
+				location.reload(true);
+			}
+		});
+		},
+			rules: {
+				usertypename:{required:true,maxlength:50,lettersonly:true,remote:'IsAvailable'},
+			},
+				
+			messages: {
+				usertypename:{required:'This field is Compulsary',maxlength:'The Max Allowed Characters is 50',lettersonly:'Only Alphabets are Allowed',remote:'The User_Type Already Exists'},
+			},
+			errorElement: "em",
+			errorPlacement: function ( error, element ) {
+				// Add the `help-block` class to the error element
+			error.addClass( "help-block errors" );
+			if ( element.prop( "type" ) === "checkbox" ) {
+				error.insertAfter( element.parent( "label" ) );
+			} else {
+				error.insertAfter( element );
+			}
+			},
+			highlight: function ( element, errorClass, validClass ) {
+				$( element ).parents( ".col-sm-5" ).addClass( "has-error" ).removeClass( "has-success" );
+			},
+			unhighlight: function (element, errorClass, validClass) {
+				$( element ).parents( ".col-sm-5" ).addClass( "has-success" ).removeClass( "has-error" );
+			}
+		});
+			
+});
+$.fn.modal.Constructor.prototype.enforceFocus = function() {};
+</script>
+@{DataRow dr=Model.Tables[0].Rows[0];}
+<div class="modal-content">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">&times;</button>
+      @ViewBag.DialogTitle
+  </div>
+  <div class="modal-body">
+	<div id="message" class="row"></div>
+    <form id="user_types_form" name="user_types_form" role="form" action ="save" >
+      <fieldset id="form_set">
+        		<div class="form-group" style="height:5px;display:none;">
+			<label class="control-label col-xs-3 text-right">usertypeid</label>
+        	<input type="text" id="usertypeid" name="usertypeid" value="@dr["usertypeid"]" />
+		</div>
+		<div class="form-group">
+			<label class="control-label col-xs-3 text-right">usertypename</label>
+			<input type="text" id="usertypename" name="usertypename" placeholder="usertypename" value="@dr["usertypename"]" />
+		</div>
+		
+        <input type="submit" id="btnuser_types" class="btn btn-lg btn-success" value="Submit" />
+      </fieldset>
+    </form>
+  </div>
+  <div class="modal-footer">
+
+  </div>
+</div>
+
+
+      

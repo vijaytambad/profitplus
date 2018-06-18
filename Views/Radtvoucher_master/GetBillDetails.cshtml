@@ -1,0 +1,75 @@
+﻿@using System.Data;
+@using System.Collections.Generic;
+@{
+    ViewBag.Title = "GetBillDetails";
+}
+
+<script >
+    $(document).ready(function (e) {
+        $('.edit').click(function (e) {
+            e.preventDefault();
+            var myurl = $(this).attr('href');
+            //alert(myurl)
+            $.ajax({
+                type: 'POST',
+                url: myurl,
+                success: function (res) {
+                    //alert(res);
+                    $('.modal-dialog').html(res);
+                    $('#myModal').show();
+                },
+                error: function (error) {
+                    $('.modal-dialog').html(error);
+                    $('#myModal').show();
+                }
+            });
+        });
+    
+    });
+</script>
+<div class= "row" style="overflow-y:scroll;height:150px;width:98%;padding-left:15px;">
+
+<table class="table table-bordered table-condensed" >
+<thead>
+<tr>
+@foreach (String hd in ViewBag.tblheader) { 
+    
+        <td> @hd</td>
+}
+ </tr>
+</thead>
+<tbody>
+    
+    @for (int i = 0; i < @Model.Rows.Count; i++) { 
+        <tr>
+            <td>@Model.Rows[i]["id"]</td>
+            <td> @Model.Rows[i]["type"]</td>
+            <td> @Model.Rows[i]["accountnumber"]</td>
+            <td>@Model.Rows[i]["dramount"]</td>
+            <td>@Model.Rows[i]["cramount"]</td> 
+            <td><a  href="EditDetails/?slno=@Model.Rows[i]["id"]" data-toggle="modal" data-target="#myModal" id="edit" class="modal-link btn-xs btn-success edit">Edit</a>
+				<a  href="voucher_masterdelete/" data-toggle="modal" data-target="#popup" id="delete" class="modal-link btn-xs btn-success delete">Delete</a></td>
+        </tr>
+    }
+</tbody>
+</table>
+</div>
+
+<div class="row">
+<table class="table table-condensed">
+    <tr>
+        <td></td>
+        <td>Total Debit</td>
+        <td><input type="text" id="totdr" name="totcr" value="@ViewBag.totdr" /></td>
+        <td>Total Credit</td>
+        <td><input type="text" id="totcr" name="totcr" value="@ViewBag.totcr" /></td>
+        <td></td>
+    </tr>
+ </table>
+</div>
+
+ <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+
+    </div>
+  </div>

@@ -1,0 +1,10 @@
+﻿@using System.Data;
+@{
+    Layout = "~/Views/Shared/_Dashboard.cshtml";
+}
+@{String menu=Session["menu"].ToString();
+if (@menu == null) { 
+    @Html.Action("Index","Login") ;   
+}
+    
+}
