@@ -35,10 +35,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="BouncyCastle.Crypto, Version=1.7.4137.9688, Culture=neutral, PublicKeyToken=a4292a325f69b123, processorArchitecture=MSIL">
-      <HintPath>packages\BouncyCastle.1.7.0\lib\Net40-Client\BouncyCastle.Crypto.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="itextsharp, Version=5.5.13.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
       <HintPath>packages\iTextSharp.5.5.13\lib\itextsharp.dll</HintPath>
       <Private>True</Private>
@@ -122,6 +118,7 @@
     <Compile Include="Controllers\account_parentController.cs" />
     <Compile Include="Controllers\AdjustmentvoucherController.cs" />
     <Compile Include="Controllers\Adjvoucher_masterController.cs" />
+    <Compile Include="Controllers\BackupController.cs" />
     <Compile Include="Controllers\bank_masterController.cs" />
     <Compile Include="Controllers\billtype_detailsController.cs" />
     <Compile Include="Controllers\billtype_masterController.cs" />
@@ -174,6 +171,7 @@
     <Compile Include="Models\user_permissions.cs" />
     <Compile Include="Models\user_types.cs" />
     <Compile Include="Models\VoucherMaster.cs" />
+    <Compile Include="POCO\MusicStore.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -196,6 +194,19 @@
     <Content Include="Contents\img\new_logo.png" />
     <Content Include="Contents\img\tim_80x80.png" />
     <Content Include="Global.asax" />
+    <Content Include="MvcMusicStore\Data\dbo.Albums_Data.sql" />
+    <Content Include="MvcMusicStore\Data\dbo.Artists_Data.sql" />
+    <Content Include="MvcMusicStore\Data\dbo.Carts_Data.sql" />
+    <Content Include="MvcMusicStore\Data\dbo.Genres_Data.sql" />
+    <Content Include="MvcMusicStore\Data\dbo.OrderDetails_Data.sql" />
+    <Content Include="MvcMusicStore\Data\dbo.Orders_Data.sql" />
+    <Content Include="MvcMusicStore\MvcMusicStore-Create.sql" />
+    <Content Include="MvcMusicStore\Tables\dbo.Albums.sql" />
+    <Content Include="MvcMusicStore\Tables\dbo.Artists.sql" />
+    <Content Include="MvcMusicStore\Tables\dbo.Carts.sql" />
+    <Content Include="MvcMusicStore\Tables\dbo.Genres.sql" />
+    <Content Include="MvcMusicStore\Tables\dbo.OrderDetails.sql" />
+    <Content Include="MvcMusicStore\Tables\dbo.Orders.sql" />
     <Content Include="Scripts\additional-methods.js" />
     <Content Include="Scripts\bootstrap-checkbox-radio.js" />
     <Content Include="Scripts\bootstrap-notify.js" />
@@ -221,6 +232,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="backups\" />
     <Folder Include="Errorlogs\" />
   </ItemGroup>
   <ItemGroup>
@@ -353,6 +365,7 @@
     <Content Include="Views\Reports\Index.cshtml" />
     <Content Include="Views\Reports\rpstatement.cshtml" />
     <Content Include="Views\Reports\trialbal.cshtml" />
+    <Content Include="Views\Backup\backupform.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

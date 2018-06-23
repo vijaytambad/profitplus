@@ -16,7 +16,7 @@ namespace ProfitPlus.Controllers
 {
     public class Account_masterController : Controller
     {
-		public int PerPageRec=4;
+		public int PerPageRec=50;
         public ActionResult Index()
         {
             return Redirect("Account_master/Account_masterlist?page=1");

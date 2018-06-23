@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -104,6 +105,17 @@ namespace ProfitPlus.Controllers
 
                 return sw.GetStringBuilder().ToString();
             }
+        }
+
+        public String indcurr(double myval)
+        {
+            CultureInfo indian = new CultureInfo("hi-IN");
+            String text = String.Format(indian, "{0:n}", myval);
+            return text;
+        }
+        public ActionResult test() {
+            double myval = 105148256.25;
+            return Content(indcurr(myval));
         }
     }
 }

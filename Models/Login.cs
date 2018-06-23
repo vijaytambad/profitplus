@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -52,5 +53,11 @@ namespace ProfitPlus.Models
             DataTable dt = DBClass.GetAllRecords(Qry);
             return dt;
         }
+        public String indcurr(double myval) {
+            CultureInfo indian = new CultureInfo("hi-IN");
+            String text = String.Format(indian, "{0:c}", myval);
+            return text;
+        }
+        
     }
 }

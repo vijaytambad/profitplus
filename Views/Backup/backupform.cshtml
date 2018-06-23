@@ -1,0 +1,88 @@
+﻿@using System.Data;
+@using System.Data.SqlClient;
+@using System.IO;
+@{
+    Layout = "~/Views/Shared/_Dashboard.cshtml";
+}
+
+<script>
+
+    /*$(document).ready(function (e) {
+        $("#backup").click(function (e) {
+            var myurl = $("#backup").attr("href");
+            $.ajax({
+                type: 'POST',
+                url: myurl,
+                async: false,
+                success: function (res) {
+                    alert(res);
+                },
+                error: function (res) {
+                    alert(res)
+                }
+            });
+
+        });*/
+
+    $(document).ready(function (e) {
+        $("#restore").click(function (e) {
+            $(this).prop('disabled', true);
+            var myurl = "/Backup/restore?selfile=" + $("#flist").find("option:selected").text();
+            $.ajax({
+                type: 'POST',
+                url: myurl,
+                async: false,
+                success: function (res) {
+                    //alert(res);
+                    $("#message").html(res);
+
+                },
+                error: function (res) {
+                    alert(res)
+                }
+            });
+        });
+
+        $("#download").click(function (e) {
+            $(this).prop('disabled', true);
+            var myurl = "/Backup/Download?selfile=" + $("#flist").find("option:selected").text();
+            window.location = myurl;
+
+        });
+
+        $("#delete").click(function (e) {
+            $(this).prop('disabled', true);
+            var myurl = "/Backup/delfile?selfile=" + $("#flist").find("option:selected").text();
+            window.location = myurl;
+
+        });
+
+    });
+
+</script>
+<div class="" id="message">
+   @ViewBag.msg;
+</div>
+<div class="row" style="margin:15px 10px;">
+    
+        <a href="/backup/backupdb" class="btn-xs btn-success" id="backup" style="margin-left:30px;height:40px;" >Create New Backup</a>
+    
+    
+        <!-- <a href="/Backup/restore" class="btn-xs btn-success" id="restore" style="margin-left:30px;height:40px;" >Restore Backup</a> -->
+        <button class="btn-xs btn-success" id="restore" style="margin-left:30px;height:40px;">Restore Backup</button>
+</div>
+@{string[] flist = ViewBag.backlist;}
+<div class="row">
+    <div class="col-xs-12">
+        <div class="col-xs-6" id="bklist">
+            <select name='flist' size='10' id='flist'>
+                @for (Int32 i = 0; i < flist.Length; i++) { 
+                    <option>@flist[i]</option>
+                }
+            </select>
+            <button class="btn-xs btn-success" id="download" style="margin-left:30px;height:40px;">Download Backup File </button>
+            <button class="btn-xs btn-success" id="delete" style="margin-left:30px;height:40px;">delete Backup File </button>
+        </div>
+    </div>
+    
+</div>

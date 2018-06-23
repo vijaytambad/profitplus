@@ -8,9 +8,12 @@ using iTextSharp;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 using iTextSharp.tool.xml;
+using System.Globalization;
+
 
 namespace ProfitPlus.Helpers
 {
+
     public class pdf
     {
         DataSet ds;
@@ -74,13 +77,17 @@ namespace ProfitPlus.Helpers
                         //String dtype = reptab.Rows[row][reptab.Columns[col]].GetType().Name;
                         if (reptab.Rows[row][reptab.Columns[col]].GetType().Name.Equals("Double"))
                         {
-                            cell = new PdfPCell(new Phrase(Convert.ToDouble(reptab.Rows[row][reptab.Columns[col]]).ToString("n2").ToString(), tblfnt));
+                            double colval = Convert.ToDouble(reptab.Rows[row][reptab.Columns[col]]);
+                            String txtval = indcurr(colval);
+                            cell = new PdfPCell(new Phrase(txtval, tblfnt));
 
                             cell.HorizontalAlignment = 2;
                         }
                         else if (reptab.Rows[row][reptab.Columns[col]].GetType().Name.Equals("Int32"))
                         {
-                            cell = new PdfPCell(new Phrase(reptab.Rows[row][reptab.Columns[col]].ToString(), tblfnt));
+                            double colval = Convert.ToDouble(reptab.Rows[row][reptab.Columns[col]]);
+                            String txtval = indcurr(colval);
+                            cell = new PdfPCell(new Phrase(txtval, tblfnt));
                             cell.HorizontalAlignment = 2;
                         }
                         else
@@ -108,10 +115,14 @@ namespace ProfitPlus.Helpers
                 DataTable trbal = ds.Tables[1];
                 PdfPCell tr1 = new PdfPCell(new Phrase("Totals : ", tblfootfnt)); tr1.Colspan = 3; tr1.HorizontalAlignment = 2;
                 tbl.AddCell(tr1);
-                PdfPCell tr2=new PdfPCell(new Phrase(Convert.ToDouble(trbal.Rows[0]["TotalCredits"]).ToString("n2").ToString(),tblfootfnt));
+                double colval = Convert.ToDouble(trbal.Rows[0]["TotalCredits"]);
+                String txtval = indcurr(colval);
+                PdfPCell tr2=new PdfPCell(new Phrase(txtval.ToString(),tblfootfnt));
                 tr2.HorizontalAlignment = 2;
                 tbl.AddCell(tr2);
-                PdfPCell tr3=new PdfPCell(new Phrase(Convert.ToDouble(trbal.Rows[0]["TotalDebits"]).ToString("n2").ToString(),tblfootfnt));
+                colval = Convert.ToDouble(trbal.Rows[0]["TotalDebits"]);
+                txtval = indcurr(colval);
+                PdfPCell tr3=new PdfPCell(new Phrase(txtval,tblfootfnt));
                 tr3.HorizontalAlignment = 2;
                 tbl.AddCell(tr3);
                 tbl.AddCell(new Phrase(""));
@@ -122,10 +133,14 @@ namespace ProfitPlus.Helpers
                 DataTable trbal = ds.Tables[1];
                 PdfPCell tr1 = new PdfPCell(new Phrase("Totals : ", tblfootfnt)); tr1.Colspan = 2; tr1.HorizontalAlignment = 2;
                 tbl.AddCell(tr1);
-                PdfPCell tr2 = new PdfPCell(new Phrase(Convert.ToDouble(trbal.Rows[0]["receipts"]).ToString("n2").ToString(), tblfootfnt));
+                double colval = Convert.ToDouble(trbal.Rows[0]["receipts"]);
+                String txtval = indcurr(colval);
+                PdfPCell tr2 = new PdfPCell(new Phrase(txtval, tblfootfnt));
                 tr2.HorizontalAlignment = 2;
                 tbl.AddCell(tr2);
-                PdfPCell tr3 = new PdfPCell(new Phrase(Convert.ToDouble(trbal.Rows[0]["payments"]).ToString("n2").ToString(), tblfootfnt));
+                colval = Convert.ToDouble(trbal.Rows[0]["payments"]);
+                txtval = indcurr(colval);
+                PdfPCell tr3 = new PdfPCell(new Phrase(txtval, tblfootfnt));
                 tr3.HorizontalAlignment = 2;
                 tbl.AddCell(tr3);
                 tbl.AddCell(new Phrase(""));
@@ -137,12 +152,16 @@ namespace ProfitPlus.Helpers
                 DataTable trbal = ds.Tables[1];
                 PdfPCell tr1 = new PdfPCell(new Phrase("Totals : ", tblfootfnt)); tr1.Colspan = 2; tr1.HorizontalAlignment = 2;
                 tbl.AddCell(tr1);
-                PdfPCell tr2 = new PdfPCell(new Phrase(Convert.ToDouble(trbal.Rows[0]["receipts"]).ToString("n2").ToString(), tblfootfnt));
+                double colval = Convert.ToDouble(trbal.Rows[0]["receipts"]);
+                String txtval = indcurr(colval);
+                PdfPCell tr2 = new PdfPCell(new Phrase(txtval, tblfootfnt));
                 tr2.HorizontalAlignment = 2;
                 tbl.AddCell(tr2);
+                colval = Convert.ToDouble(trbal.Rows[0]["payments"]);
+                txtval = indcurr(colval);
                 PdfPCell tr3 = new PdfPCell(new Phrase("Totals : ", tblfootfnt)); tr3.Colspan = 2; tr3.HorizontalAlignment = 2;
                 tbl.AddCell(tr3);
-                PdfPCell tr4 = new PdfPCell(new Phrase(Convert.ToDouble(trbal.Rows[0]["payments"]).ToString("n2").ToString(), tblfootfnt));
+                PdfPCell tr4 = new PdfPCell(new Phrase(txtval, tblfootfnt));
                 tr4.HorizontalAlignment = 2;
                 tbl.AddCell(tr4);
                 //tbl.AddCell(new Phrase(""));
@@ -160,6 +179,12 @@ namespace ProfitPlus.Helpers
             doc.Close();
         }
 
+        public String indcurr(double myval)
+        {
+            CultureInfo indian = new CultureInfo("hi-IN");
+            String text = String.Format(indian, "{0:c}", myval);
+            return text;
+        }
         private void openpdf(String myfilename) {
             HttpContext.Current.Response.AddHeader("Content-Disposition", "attachment;filename=test.pdf");
             HttpContext.Current.Response.ContentType = "application/pdf";

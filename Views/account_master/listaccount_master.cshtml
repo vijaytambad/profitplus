@@ -76,7 +76,7 @@ $(document).ready(function(e) {
 	<div class="panel-body" >
 		<a class='modal-link btn-xs btn-success' id='addrecord' data-toggle='modal' data-target='#popup' href="@ViewData["addlink"]" >Add account_master</a>
 		<div class="table-responsive">
-		<table  class="table table-bordered table-condensed"  id="tblaccount_master">
+		<table  class="table table-bordered table-condensed"  id="tblaccount_master" style="margin:0px;">
 			<thead> <!-- ;$html.= count($headings); -->
 				<tr class="h6">
 					@for(int i=0;i<@Model.Tables["account_master"].Columns.Count;i++)
@@ -86,7 +86,11 @@ $(document).ready(function(e) {
 					<td>Actions</td>
                 </tr>
 			</thead>
+            </table>
+            <div id="second" style="height:400px;overflow-y:scroll;">
+            <table class="table table-bordered table-condensed" >
 			<tbody>
+            
 				<tr> 
 					@for(var i=0;i<Model.Tables["account_master"].Rows.Count;i++){
 						<tr>
@@ -104,7 +108,7 @@ $(document).ready(function(e) {
 					}
 			</tbody>
 			
-		</table>
+		</table></div>
 		</div>
         
 	</div> 

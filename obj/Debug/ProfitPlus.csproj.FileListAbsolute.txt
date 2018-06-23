@@ -87,8 +87,6 @@ C:\Users\User\Desktop\ProfitPlus\bin\System.Web.WebPages.Razor.xml
 C:\Users\User\Desktop\ProfitPlus\obj\Debug\ProfitPlus.csprojResolveAssemblyReference.cache
 C:\Users\User\Desktop\ProfitPlus\obj\Debug\ProfitPlus.dll
 C:\Users\User\Desktop\ProfitPlus\obj\Debug\ProfitPlus.pdb
-C:\Users\User\Desktop\ProfitPlus\bin\BouncyCastle.Crypto.dll
 C:\Users\User\Desktop\ProfitPlus\bin\itextsharp.dll
-C:\Users\User\Desktop\ProfitPlus\bin\BouncyCastle.Crypto.pdb
 C:\Users\User\Desktop\ProfitPlus\bin\itextsharp.xml
 C:\Users\User\Desktop\ProfitPlus\bin\itextsharp.xmlworker.dll
